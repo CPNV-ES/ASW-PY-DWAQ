@@ -1,11 +1,14 @@
-class AwsVpcManager:
-    # AmazonEc2Client
-    __client = None
-    # Vpcs list
-    __vpcs = None
+import boto3
 
+
+class AwsVpcManager:
     def __init__(self, aws_profile_name, aws_region_end_point):
-        pass
+        self.aws_profile_name = aws_profile_name
+        self.aws_region_end_point = aws_region_end_point
+        # AmazonEc2Client
+        self.client = boto3.resource('ec2')
+        # Vpcs list
+        self.vpcs = None
 
     async def create_vpc(self, vpc_tag_name, cidr_block):
         """Create a new vpc
@@ -17,7 +20,10 @@ class AwsVpcManager:
         cidr_block : string
             The primary IPv4 CIDR block for the VPC
         """
-        pass
+
+        vpc = self.client.create_vpc(CidrBlock=cidr_block)
+        vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
+        vpc.wait_until_available()
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
