@@ -1,18 +1,21 @@
 import unittest
-import Exception
 
-class UnitTestAwsVpcManager(unittest.TestCase):
+from src.aws_vpc_manager import AwsVpcManager
+import src.exception
+
+
+class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
     """This test class validates the good behavior of the VpcManager class
     """
-    @classmethod
-    def setUpClass(cls):
-        """Setup test vpc properties and instantiate the vpc mnager
+
+    def setUp(self):
+        """Setup test vpc properties and instantiate the vpc manager
         """
-        cls.__profile_name = "VIR1_INFRA_DEPLOYMENT"
-        cls.__region_end_point = "ap-south-1"
-        cls.__vpc_manager = new AwsVpcManager(cls.__profile_name, cls.__region_end_point)
-        cls.__vpc_tag_name = "VIR1_SCRUMMASTER"
-        cls.__cidr_block = "10.0.0.0/16"
+        self.__profile_name = "VIR1_INFRA_DEPLOYMENT"
+        self.__region_end_point = "ap-south-1"
+        self.__vpc_manager = AwsVpcManager(self.__profile_name, self.__region_end_point)
+        self.__vpc_tag_name = "VIR1_SCRUMMASTER"
+        self.__cidr_block = "10.0.0.0/16"
 
     async def create_vpc_nominal_case_success(self):
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
@@ -28,8 +31,8 @@ class UnitTestAwsVpcManager(unittest.TestCase):
         # given
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # when
-        with self.assertRaises(Exception.VpcNameAlreadyExists):
-            await self.__vpc_manager.create_vpc(self.__vpc_tag_name,self.__cidr_block)
+        with self.assertRaises(src.exception.VpcNameAlreadyExists):
+            await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # then : Exception must be thrown
 
     async def delete_vpc_nominal_case_success(self):
@@ -38,7 +41,7 @@ class UnitTestAwsVpcManager(unittest.TestCase):
         :return: The return type is mandatory when using async Task test method
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name,self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # when
         await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
         # then
@@ -50,21 +53,20 @@ class UnitTestAwsVpcManager(unittest.TestCase):
         :return: The return type is mandatory when using async Task test method
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name,self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # when
         result = await self.__vpc_manager.exists(self.__vpc_tag_name)
         # then
         self.assertTrue(result)
 
-
-    @classmethod
-    async def tearDownClass(cls):
+    async def tearDown(self):
         """
         This method is used to clean class properties after each test method
         """
-        if (await cls.__vpc_manager.exists(cls.__vpc_tag_name)):
-            await cls.__vpc_manager.delete_vpc(cls.__vpc_tag_name)
+        response = await self.__vpc_manager.exists(self.__vpc_tag_name)
+        if response:
+            await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
 
 
-
-
+if __name__ == '__main__':
+    unittest.main()
