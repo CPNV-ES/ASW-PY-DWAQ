@@ -1,9 +1,13 @@
 class AwsVpcManager:
+    # AmazonEc2Client
+    __client = None
+    # Vpcs list
+    __vpcs = None
 
     def __init__(self, aws_profile_name, aws_region_end_point):
         pass
 
-    def create_vpc(self, vpc_tag_name, cidr_block):
+    async def create_vpc(self, vpc_tag_name, cidr_block):
         """Create a new vpc
 
         Parameters
@@ -11,12 +15,11 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         cidr_block : string
-            Range of IPv4 addresses for the VPC in the form of a Classless Inter-Domain Routing (CIDR) block;
-            for example, 10.0. 0.0/16 . This is the primary CIDR block for your VPC.
+            The primary IPv4 CIDR block for the VPC
         """
         pass
 
-    def delete_vpc(self, vpc_tag_name):
+    async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
 
         Parameters
@@ -26,7 +29,7 @@ class AwsVpcManager:
         """
         pass
 
-    def exists(self, vpc_tag_name):
+    async def exists(self, vpc_tag_name):
         """Verify if the vpc exists
 
         Parameters
@@ -41,12 +44,12 @@ class AwsVpcManager:
         return False
         pass
 
-    def __describe_vpcs(self):
+    async def __describe_vpcs(self):
         """Describe a vpc
         """
         pass
 
-    def __vpc_id(self, vpc_tag_name):
+    async def __vpc_id(self, vpc_tag_name):
         """Get the vpc id
 
         Parameters
