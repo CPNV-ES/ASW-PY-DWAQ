@@ -1,4 +1,5 @@
 import boto3
+import asyncio
 
 
 class AwsVpcManager:
@@ -21,9 +22,12 @@ class AwsVpcManager:
             The primary IPv4 CIDR block for the VPC
         """
 
-        vpc = self.client.create_vpc(CidrBlock=cidr_block)
-        vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
-        vpc.wait_until_available()
+        if not await self.exists(vpc_tag_name):
+            vpc = self.client.create_vpc(CidrBlock=cidr_block)
+            vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
+            vpc.wait_until_available()
+        else:
+            print("Vpc " + vpc_tag_name + " already exists")
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
@@ -47,11 +51,14 @@ class AwsVpcManager:
         -------
         Boolean : True if the vpc exists
         """
-        return False
-        pass
 
-    async def __describe_vpcs(self):
-        """Describe a vpc
+        if await self.__vpc_id(vpc_tag_name):
+            return True
+
+        return False
+
+    async def describe_vpcs(self):
+        """Retrieve the values of the vpc attributes
         """
         pass
 
@@ -63,4 +70,8 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         """
-        pass
+        filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
+        vpcs_list = list(self.client.vpcs.filter(Filters=filter))
+        if vpcs_list:
+            return vpcs_list[0].id
+        return False
