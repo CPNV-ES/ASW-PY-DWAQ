@@ -1,4 +1,4 @@
-class AwsVpcManager:
+class AwsVpcManager():
     # AmazonEc2Client
     __client = None
     # Vpcs list
