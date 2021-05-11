@@ -1,11 +1,13 @@
-class AwsVpcManager():
-    # AmazonEc2Client
-    __client = None
-    # Vpcs list
-    __vpcs = None
+import boto3
 
+class AwsVpcManager:
     def __init__(self, aws_profile_name, aws_region_end_point):
-        pass
+        self.aws_profile_name = aws_profile_name
+        self.aws_region_end_point = aws_region_end_point
+        # AmazonEc2Client
+        self.client = boto3.resource('ec2')
+        # Vpcs list
+        self.vpcs = None
 
     async def create_vpc(self, vpc_tag_name, cidr_block):
         """Create a new vpc
@@ -17,7 +19,13 @@ class AwsVpcManager():
         cidr_block : string
             The primary IPv4 CIDR block for the VPC
         """
-        pass
+
+        if not await self.exists(vpc_tag_name):
+            vpc = self.client.create_vpc(CidrBlock=cidr_block)
+            vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
+            vpc.wait_until_available()
+        else:
+            print("Vpc " + vpc_tag_name + " already exists")
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
@@ -27,7 +35,11 @@ class AwsVpcManager():
         vpc_tag_name : string
             The name of the vpc
         """
-        pass
+
+        if await self.exists(vpc_tag_name):
+            self.client.delete_vpc()
+        else:
+            print("Vpc " + vpc_tag_name + " does not exists")
 
     async def exists(self, vpc_tag_name):
         """Verify if the vpc exists
@@ -41,11 +53,14 @@ class AwsVpcManager():
         -------
         Boolean : True if the vpc exists
         """
-        return False
-        pass
 
-    async def __describe_vpcs(self):
-        """Describe a vpc
+        if await self.__vpc_id(vpc_tag_name):
+            return True
+
+        return False
+
+    async def describe_vpcs(self):
+        """Retrieve the values of the vpc attributes
         """
         pass
 
@@ -57,4 +72,11 @@ class AwsVpcManager():
         vpc_tag_name : string
             The name of the vpc
         """
-        pass
+
+        filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
+        vpcs_list = list(self.client.vpcs.filter(Filters=filter))
+
+        if vpcs_list:
+            return vpcs_list[0].id
+
+        return False
