@@ -20,13 +20,12 @@ class AwsVpcManager:
         cidr_block : string
             The primary IPv4 CIDR block for the VPC
         """
-
-        if not await self.exists(vpc_tag_name):
+        if await self.exists(vpc_tag_name):
+            print("Vpc " + vpc_tag_name + " already exists")
+        else:
             vpc = self.client.create_vpc(CidrBlock=cidr_block)
             vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
             vpc.wait_until_available()
-        else:
-            print("Vpc " + vpc_tag_name + " already exists")
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
@@ -36,7 +35,6 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         """
-
         if await self.exists(vpc_tag_name):
             self.client.delete_vpc()
         else:
@@ -54,16 +52,17 @@ class AwsVpcManager:
         -------
         Boolean : True if the vpc exists
         """
-
         if await self.__vpc_id(vpc_tag_name):
             return True
 
         return False
 
     async def describe_vpcs(self):
-        """Retrieve the values of the vpc attributes
+        """Retrieve all the vpcs
         """
-        pass
+        filters = [{'Name': 'tag:Name', 'Values': ['*']}]
+        self.vpcs = list(self.client.vpcs.filter(Filters=filters))
+        print(self.vpcs)
 
     async def __vpc_id(self, vpc_tag_name):
         """Get the vpc id
@@ -73,11 +72,10 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         """
-
         filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
         vpcs_list = list(self.client.vpcs.filter(Filters=filter))
 
         if vpcs_list:
             return vpcs_list[0].id
 
-        return False
+        return None
