@@ -3,7 +3,6 @@ import math
 import os
 import re
 from collections import Counter
-from AwsVpcManager import AwsVpcManager
 
 
 class Spamfilter:
@@ -220,6 +219,3 @@ if __name__ == "__main__":
     spamfilter.print_table_info()
     spamfilter.classify_all("emails/testing/spam/", "spam")
     spamfilter.classify_all("emails/testing/ham/", "ham")
-
-aws_vpc_manager = AwsVpcManager("", "")
-asyncio.run(aws_vpc_manager.exists(""))
