@@ -1,5 +1,4 @@
 import boto3
-import asyncio
 
 
 class AwsVpcManager:
@@ -37,7 +36,11 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         """
-        pass
+
+        if await self.exists(vpc_tag_name):
+            self.client.delete_vpc()
+        else:
+            print("Vpc " + vpc_tag_name + " does not exists")
 
     async def exists(self, vpc_tag_name):
         """Verify if the vpc exists
@@ -70,8 +73,11 @@ class AwsVpcManager:
         vpc_tag_name : string
             The name of the vpc
         """
+
         filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
         vpcs_list = list(self.client.vpcs.filter(Filters=filter))
+
         if vpcs_list:
             return vpcs_list[0].id
+
         return False
