@@ -135,3 +135,6 @@ dmypy.json
 
 # PyCharm
 .idea
+
+# Main
+main.py
