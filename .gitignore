@@ -137,4 +137,4 @@ dmypy.json
 .idea
 
 # Main
-main.py
+./main.py
