@@ -34,25 +34,30 @@ class AwsRtbManager(IRtbManager):
         pass
 
     async def disassociate_rtb(self, association_id):
+        # Todo: Need to throw exception if an error is returned
         self.client.disassociate_route_table(
             AssociationId=association_id,
         )
         pass
 
     async def delete_rtb(self, rtb_id):
+        # Todo: Need to throw exception if an error is returned
         self.client.delete_route_table(
             RouteTableId=rtb_id,
         )
         pass
 
-    async def rtb_exists(self, rtb_tag_name):
-        pass
-
-    async def create_route(self, rtb_id, cidr_block, gateway_id):
+    async def create_route(self, rtb_id, cidr_block, gateway_id, local_gateway_id):
+        self.client.create_route(
+            DestinationCidrBlock=cidr_block,
+            RouteTableId=rtb_id,
+            GatewayId=gateway_id,
+            LocalGatewayId=local_gateway_id,
+        )
         pass
 
     async def describe_rtb(self, rtb_tag_name):
-        self.client.describe_route_tables(
+        return self.client.describe_route_tables(
             Filters=[
                 {
                     'Name': 'tag:Name',
@@ -61,4 +66,16 @@ class AwsRtbManager(IRtbManager):
             ],
             DryRun=True | False
         )
-        pass
+
+    async def select_id(self, rtb_tag_name, wanted_id):
+        # Todo: Get id from the json
+        response = await self.describe_rtb(rtb_tag_name)
+        if response:
+            # Return route table association_id
+            if wanted_id == "assoc_id":
+                return response
+            # Return by default the route table id
+            else:
+                return response
+
+        return None
