@@ -40,6 +40,9 @@ class AwsRtbManager(IRtbManager):
         pass
 
     async def delete_rtb(self, rtb_id):
+        self.client.delete_route_table(
+            RouteTableId=rtb_id,
+        )
         pass
 
     async def rtb_exists(self, rtb_tag_name):
