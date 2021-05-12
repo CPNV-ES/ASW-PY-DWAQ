@@ -8,8 +8,9 @@ class AwsRtbManager(IRtbManager):
         self.client = boto3.client('ec2')
 
     async def create_rtb(self, rtb_tag_name, vpc_id):
-        # Todo: Check if exists before creating it
+        # Todo: Need to throw exception if's already created
         self.client.create_route_table(
+            DryRun=True | False,
             VpcId=vpc_id,
             TagSpecifications=[
                 {
@@ -20,10 +21,15 @@ class AwsRtbManager(IRtbManager):
                 }
             ]
         )
-
         pass
 
     async def associate_rtb(self, rtb_id, subnet_id):
+        # Todo: Need to throw exception if an error is returned
+        self.client.associate_route_table(
+            DryRun=True | False,
+            RouteTableId=rtb_id,
+            SubnetId=subnet_id,
+        )
         pass
 
     async def disassociate_rtb(self, association_id):
