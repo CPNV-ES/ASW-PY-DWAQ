@@ -34,6 +34,9 @@ class AwsRtbManager(IRtbManager):
         pass
 
     async def disassociate_rtb(self, association_id):
+        self.client.disassociate_route_table(
+            AssociationId=association_id,
+        )
         pass
 
     async def delete_rtb(self, rtb_id):
