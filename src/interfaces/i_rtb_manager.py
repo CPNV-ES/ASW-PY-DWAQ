@@ -25,3 +25,7 @@ class IRtbManager(ABC):
     @abstractmethod
     def create_route(self, rtb_id, cidr_block, gateway_id):
         pass
+
+    @abstractmethod
+    def describe_rtb(self, rtb_tag_name):
+        pass

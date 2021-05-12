@@ -3,6 +3,7 @@ from src.interfaces.i_rtb_manager import IRtbManager
 
 
 class AwsRtbManager(IRtbManager):
+
     def __init__(self):
         # AmazonEc2Client
         self.client = boto3.client('ec2')
@@ -42,4 +43,16 @@ class AwsRtbManager(IRtbManager):
         pass
 
     async def create_route(self, rtb_id, cidr_block, gateway_id):
+        pass
+
+    async def describe_rtb(self, rtb_tag_name):
+        self.client.describe_route_tables(
+            Filters=[
+                {
+                    'Name': 'tag:Name',
+                    'Values': [rtb_tag_name]
+                }
+            ],
+            DryRun=True | False
+        )
         pass
