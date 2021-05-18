@@ -81,3 +81,20 @@ class AwsInternetGatewayManager:
         else:
             raise Exception("The specified internet gateway does not exist")
 
+    async def detach_from_vpc(self, igw_tag_name):
+        """
+        Detach the specified internet gateway from the vpc
+        :param igw_tag_name:
+        :return:
+        """
+        if await self.exists(igw_tag_name):
+            filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
+            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+
+            try:
+                attached_vpc_id = self.resource.InternetGateway(igws_list[0].id).attachments[0]["VpcId"]
+                self.resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
+            except IndexError:
+                raise Exception("The specified internet gateway is not attached to any vpc")
+        else:
+            raise Exception("The specified internet gateway does not exist")
