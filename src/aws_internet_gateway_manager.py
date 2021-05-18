@@ -74,8 +74,12 @@ class AwsInternetGatewayManager:
             if await vpc_manager.exists(vpc_tag_name):
                 filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
                 igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+                vpc_id = await vpc_manager.vpc_id(vpc_tag_name)
 
-                self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_manager.vpc_id)
+                try:
+                    self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
+                except Exception:
+                    raise Exception("The specified internet gateway is already attached")
             else:
                 raise Exception("The specified vpc does not exist")
         else:
