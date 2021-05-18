@@ -16,19 +16,22 @@ class AwsInternetGatewayManager:
         tag_name : string
             The name of the internet gateway
         """
-        self.client.create_internet_gateway(
-            TagSpecifications=[
-                {
-                    'ResourceType': 'internet-gateway',
-                    'Tags': [
-                        {
-                            'Key': 'Name',
-                            'Value': tag_name
-                        },
-                    ]
-                },
-            ]
-        )
+        if await self.exists(tag_name):
+            raise Exception("The specified internet gateway already exist")
+        else:
+            self.client.create_internet_gateway(
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'internet-gateway',
+                        'Tags': [
+                            {
+                                'Key': 'Name',
+                                'Value': tag_name
+                            },
+                        ]
+                    },
+                ]
+            )
 
     async def exists(self, tag_name):
         """
@@ -57,4 +60,4 @@ class AwsInternetGatewayManager:
 
             self.resource.InternetGateway(igws_list[0].id).delete()
         else:
-            raise Exception("Error: the specified internet gateway does not exist")
+            raise Exception("The specified internet gateway does not exist")
