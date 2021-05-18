@@ -31,7 +31,19 @@ class AwsSubnetManager(ISubnetManager):
             subnet.create_tags(Tags=[{'Key': 'Name', 'Value': subnet_tag_name}])
 
     async def delete_subnet(self, subnet_tag_name):
-        pass
+        """Delete a subnet
+
+        Parameters
+        ----------
+        subnet_tag_name : string
+            The name of the subnet
+        """
+        if await self.exists(subnet_tag_name):
+            subnet_id = await self.__subnet_id(subnet_tag_name)
+            self.client.delete_subnet(SubnetId=subnet_id)
+        else:
+            raise subnet_exception.SubnetNameDoesntExists('Subnet delete error!',
+                                                          'Subnet "' + subnet_tag_name + '" doesn\'t exists')
 
     async def exists(self, subnet_tag_name):
         """Verify if the subnet exists
@@ -48,3 +60,19 @@ class AwsSubnetManager(ISubnetManager):
         response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [subnet_tag_name]}])
 
         return True if response['Subnets'] else False
+
+    async def __subnet_id(self, subnet_tag_name):
+        """Get the subnet id
+
+        Parameters
+        ----------
+        subnet_tag_name : string
+            The name of the subnet
+
+        Returns
+        -------
+        String : Subnet id
+        """
+        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [subnet_tag_name]}])
+
+        return response['Subnets'][0]['SubnetId']
