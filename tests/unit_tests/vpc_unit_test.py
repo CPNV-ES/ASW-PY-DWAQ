@@ -2,7 +2,7 @@ import unittest
 import asyncio
 
 import src.aws_vpc_manager as aws_m
-import src.exception
+import src.exception.vpc_exception
 
 
 class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
@@ -38,7 +38,7 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         # given
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # when
-        with self.assertRaises(src.exception.VpcNameAlreadyExists):
+        with self.assertRaises(src.exception.vpc_exception.VpcNameAlreadyExists):
             await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # then : Exception must be thrown
 
