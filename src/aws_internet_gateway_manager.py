@@ -29,3 +29,18 @@ class AwsInternetGatewayManager:
                 },
             ]
         )
+
+    async def exists(self, tag_name):
+        """
+        Define if the internet gateway exists or not
+        :param tag_name:
+        :return:
+        """
+        filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
+        igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+
+        try:
+            if igws_list[0].id:
+                return True
+        except IndexError:
+            return False
