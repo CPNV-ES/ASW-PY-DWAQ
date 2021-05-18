@@ -2,9 +2,7 @@ import boto3
 
 
 class AwsInternetGatewayManager:
-    def __init__(self, aws_profile_name, aws_region_end_point):
-        self.aws_profile_name = aws_profile_name
-        self.aws_region_end_point = aws_region_end_point
+    def __init__(self):
         self.client = boto3.client("ec2")
         self.resource = boto3.resource("ec2")
 
