@@ -3,19 +3,19 @@ from abc import ABC, abstractmethod
 
 class IRtbManager(ABC):
     @abstractmethod
-    def create_rtb(self, rtb_tag_name, vpc_id):
+    def create(self, rtb_tag_name, vpc_id):
         pass
 
     @abstractmethod
-    def associate_rtb(self, rtb_id, subnet_id):
+    def associate(self, rtb_id, subnet_id):
         pass
 
     @abstractmethod
-    def disassociate_rtb(self, association_id):
+    def disassociate(self, association_id):
         pass
 
     @abstractmethod
-    def delete_rtb(self, rtb_id):
+    def delete(self, rtb_id):
         pass
 
     @abstractmethod
@@ -23,6 +23,6 @@ class IRtbManager(ABC):
         pass
 
     @abstractmethod
-    def describe_rtb(self, rtb_tag_name):
+    def describe(self, rtb_tag_name):
         pass
 

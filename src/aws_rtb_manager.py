@@ -8,13 +8,13 @@ class AwsRtbManager(IRtbManager):
         # AmazonEc2Client
         self.client = boto3.client('ec2')
 
-    async def create_rtb(self, rtb_tag_name, vpc_id):
+    async def create(self, rtb_tag_name, vpc_id):
         # Todo: Need to throw exception if's already created
         self.client.create_route_table(
-            DryRun=True | False,
             VpcId=vpc_id,
             TagSpecifications=[
                 {
+                    'ResourceType': 'route-table',
                     'Tags': [{
                         'Key': 'Name',
                         'Value': rtb_tag_name
@@ -24,23 +24,22 @@ class AwsRtbManager(IRtbManager):
         )
         pass
 
-    async def associate_rtb(self, rtb_id, subnet_id):
+    async def associate(self, rtb_id, subnet_id):
         # Todo: Need to throw exception if an error is returned
         self.client.associate_route_table(
-            DryRun=True | False,
             RouteTableId=rtb_id,
             SubnetId=subnet_id,
         )
         pass
 
-    async def disassociate_rtb(self, association_id):
+    async def disassociate(self, association_id):
         # Todo: Need to throw exception if an error is returned
         self.client.disassociate_route_table(
             AssociationId=association_id,
         )
         pass
 
-    async def delete_rtb(self, rtb_id):
+    async def delete(self, rtb_id):
         # Todo: Need to throw exception if an error is returned
         self.client.delete_route_table(
             RouteTableId=rtb_id,
@@ -56,7 +55,7 @@ class AwsRtbManager(IRtbManager):
         )
         pass
 
-    async def describe_rtb(self, rtb_tag_name):
+    async def describe(self, rtb_tag_name):
         return self.client.describe_route_tables(
             Filters=[
                 {
@@ -64,18 +63,20 @@ class AwsRtbManager(IRtbManager):
                     'Values': [rtb_tag_name]
                 }
             ],
-            DryRun=True | False
         )
 
-    async def select_id(self, rtb_tag_name, wanted_id):
+    async def get_assoc_id(self, rtb_tag_name):
         # Todo: Get id from the json
-        response = await self.describe_rtb(rtb_tag_name)
+        response = await self.describe(rtb_tag_name)
         if response:
-            # Return route table association_id
-            if wanted_id == "assoc_id":
-                return response
-            # Return by default the route table id
-            else:
-                return response
+            return response['RouteTables'][0]["Associations"][0]["RouteTableAssociationId"]
+
+        return None
+
+    async def get_rtb_id(self, rtb_tag_name):
+        # Todo: Get id from the json
+        response = await self.describe(rtb_tag_name)
+        if response:
+            return response['RouteTables'][0]["Associations"][0]["RouteTableId"]
 
         return None
