@@ -44,3 +44,17 @@ class AwsInternetGatewayManager:
                 return True
         except IndexError:
             return False
+
+    async def delete_internet_gateway(self, tag_name):
+        """
+        Delete the specified internet gateway
+        :param tag_name:
+        :return:
+        """
+        if await self.exists(tag_name):
+            filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
+            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+
+            self.resource.InternetGateway(igws_list[0].id).delete()
+        else:
+            raise Exception("Error: the specified internet gateway does not exist")
