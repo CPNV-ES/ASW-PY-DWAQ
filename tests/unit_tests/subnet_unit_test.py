@@ -26,16 +26,20 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         self.__vpc_tag_name = "vpc_test_subnet"
         self.__vpc_cidr_block = "10.0.0.0/16"
 
+    async def asyncSetUp(self):
+        """
+        Setup a new vpc
+        """
+        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
+        self.__vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+
     async def test_create_subnet_nominal_case_success(self):
         """
         This test method tests the subnet creation action.
         This is the nominal case (all parameters are correctly set).
         :return: The return type is mandatory when using async Task test method
         """
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
-
-        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         self.assertTrue(await self.__subnet_manager.exists(self.__subnet_tag_name))
 
     async def test_create_subnet_already_exists_throw_exception(self):
@@ -45,13 +49,10 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         :return: The return type is mandatory when using async Task test method
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
-
-        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
         with self.assertRaises(subnet_exception.SubnetNameAlreadyExists):
-            await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+            await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # then : Exception must be thrown
 
     async def test_delete_subnet_nominal_case_success(self):
@@ -60,14 +61,10 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         :return: The return type is mandatory when using async Task test method
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
-
-        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
         await self.__subnet_manager.delete_subnet(self.__subnet_tag_name)
 
-        await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
         # then
         self.assertFalse(await self.__subnet_manager.exists(self.__subnet_tag_name))
 
@@ -77,10 +74,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         :return: The return type is mandatory when using async Task test method
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
-
-        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
         result = await self.__subnet_manager.exists(self.__subnet_tag_name)
         # then

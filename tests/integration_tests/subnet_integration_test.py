@@ -25,6 +25,13 @@ class IntegrationTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         self.__vpc_tag_name = "vpc_test_subnet"
         self.__vpc_cidr_block = "10.0.0.0/16"
 
+    async def asyncSetUp(self):
+        """
+        Setup a new vpc
+        """
+        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
+        self.__vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+
     async def test_scenario_nominal_case_success(self):
         """
         This test method try to create a Subnet.
@@ -38,10 +45,7 @@ class IntegrationTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         # refer to Setup Method
 
         # when
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
-
-        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, vpc_id)
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
 
         # then
         self.assertTrue(await self.__subnet_manager.exists(self.__subnet_tag_name))
