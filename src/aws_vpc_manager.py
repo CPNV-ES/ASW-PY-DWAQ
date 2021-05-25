@@ -1,7 +1,8 @@
 import boto3
 import json
 from src.interfaces.i_vpc_manager import IVpcManager
-from src.exception.vpc_exception import VpcNameAlreadyExists
+import src.exception.vpc_exception as vpc_exception
+
 
 class AwsVpcManager(IVpcManager):
     def __init__(self, aws_profile_name, aws_region_end_point):
@@ -28,7 +29,7 @@ class AwsVpcManager(IVpcManager):
             vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
             vpc.wait_until_available()
         else:
-            raise VpcNameAlreadyExists('AwsVpcManager', 'Already exists')
+            raise vpc_exception.VpcNameAlreadyExists('AwsVpcManager', 'Already exists')
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
@@ -42,7 +43,7 @@ class AwsVpcManager(IVpcManager):
             vpc_id = await self.vpc_id(vpc_tag_name)
             self.client.delete_vpc(VpcId=vpc_id)
         else:
-            print("Vpc " + vpc_tag_name + " does not exists")
+            raise vpc_exception.VpcNameDoesntExists('AwsVpcManager', 'Vpc "' + vpc_tag_name + '" doesn\'t exists')
 
     async def exists(self, vpc_tag_name):
         """Verify if the vpc exists
