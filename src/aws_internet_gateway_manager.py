@@ -8,12 +8,10 @@ class AwsInternetGatewayManager:
         self.resource = boto3.resource("ec2")
 
     async def create_internet_gateway(self, tag_name):
-        """Create a new internet gateway
-
-        Parameters
-        ----------
-        tag_name : string
-            The name of the internet gateway
+        """
+        Create a new internet gateway
+        :param tag_name:
+        :return:
         """
         if await self.exists(tag_name):
             raise Exception("The specified internet gateway already exist")
