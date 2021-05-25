@@ -1,12 +1,15 @@
 import boto3
+import json
 from src.interfaces.i_vpc_manager import IVpcManager
+from src.exception import VpcNameAlreadyExists
 
 class AwsVpcManager(IVpcManager):
     def __init__(self, aws_profile_name, aws_region_end_point):
         self.aws_profile_name = aws_profile_name
         self.aws_region_end_point = aws_region_end_point
         # AmazonEc2Client
-        self.client = boto3.resource('ec2')
+        self.client = boto3.client('ec2')
+        self.resource = boto3.resource('ec2')
         # Vpcs list
         self.vpcs = None
 
@@ -20,12 +23,12 @@ class AwsVpcManager(IVpcManager):
         cidr_block : string
             The primary IPv4 CIDR block for the VPC
         """
-        if await self.exists(vpc_tag_name):
-            print("Vpc " + vpc_tag_name + " already exists")
-        else:
-            vpc = self.client.create_vpc(CidrBlock=cidr_block)
+        if not await self.exists(vpc_tag_name):
+            vpc = self.resource.create_vpc(CidrBlock=cidr_block)
             vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
             vpc.wait_until_available()
+        else:
+            raise VpcNameAlreadyExists('AwsVpcManager', 'Already exists')
 
     async def delete_vpc(self, vpc_tag_name):
         """Delete a vpc
@@ -36,7 +39,8 @@ class AwsVpcManager(IVpcManager):
             The name of the vpc
         """
         if await self.exists(vpc_tag_name):
-            self.client.delete_vpc()
+            vpc_id = await self.vpc_id(vpc_tag_name)
+            self.client.delete_vpc(VpcId=vpc_id)
         else:
             print("Vpc " + vpc_tag_name + " does not exists")
 
@@ -52,19 +56,22 @@ class AwsVpcManager(IVpcManager):
         -------
         Boolean : True if the vpc exists
         """
-        if await self.__vpc_id(vpc_tag_name):
-            return True
-
-        return False
+        return True if await self.vpc_id(vpc_tag_name) else False
 
     async def describe_vpcs(self):
         """Retrieve all the vpcs
         """
-        filters = [{'Name': 'tag:Name', 'Values': ['*']}]
-        self.vpcs = list(self.client.vpcs.filter(Filters=filters))
-        print(self.vpcs)
+        vpcs = list(self.resource.vpcs.filter(Filters=[]))
+        response = None
+        for vpc in vpcs:
+            response = self.client.describe_vpcs(
+                VpcIds=[
+                    vpc.id,
+                ]
+            )
+        return json.dumps(response, sort_keys=True, indent=4)
 
-    async def __vpc_id(self, vpc_tag_name):
+    async def vpc_id(self, vpc_tag_name):
         """Get the vpc id
 
         Parameters
@@ -73,7 +80,7 @@ class AwsVpcManager(IVpcManager):
             The name of the vpc
         """
         filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
-        vpcs_list = list(self.client.vpcs.filter(Filters=filter))
+        vpcs_list = list(self.resource.vpcs.filter(Filters=filter))
 
         if vpcs_list:
             return vpcs_list[0].id
