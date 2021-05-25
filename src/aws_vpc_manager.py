@@ -57,7 +57,8 @@ class AwsVpcManager(IVpcManager):
         -------
         Boolean : True if the vpc exists
         """
-        return True if await self.vpc_id(vpc_tag_name) else False
+        response = self.client.describe_vpcs(Filters=[{'Name': 'tag:Name', 'Values': [vpc_tag_name]}])
+        return True if response['Vpcs'] else False
 
     async def describe_vpcs(self):
         """Retrieve all the vpcs
@@ -80,10 +81,7 @@ class AwsVpcManager(IVpcManager):
         vpc_tag_name : string
             The name of the vpc
         """
-        filter = [{'Name': 'tag:Name', 'Values': [vpc_tag_name]}]
-        vpcs_list = list(self.resource.vpcs.filter(Filters=filter))
-
-        if vpcs_list:
-            return vpcs_list[0].id
-
-        return None
+        response = self.client.describe_vpcs(Filters=[{'Name': 'tag:Name', 'Values': [vpc_tag_name]}])
+        if response['Vpcs']:
+            return response['Vpcs'][0]['VpcId']
+        raise vpc_exception.VpcNameDoesntExists('AwsVpcManager', 'Vpc "' + vpc_tag_name + '" doesn\'t exists')
