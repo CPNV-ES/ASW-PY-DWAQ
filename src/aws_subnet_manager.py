@@ -39,7 +39,7 @@ class AwsSubnetManager(ISubnetManager):
             The name of the subnet
         """
         if await self.exists(subnet_tag_name):
-            subnet_id = await self.__subnet_id(subnet_tag_name)
+            subnet_id = await self.subnet_id(subnet_tag_name)
             self.client.delete_subnet(SubnetId=subnet_id)
         else:
             raise subnet_exception.SubnetNameDoesntExists('Subnet delete error!',
@@ -61,7 +61,7 @@ class AwsSubnetManager(ISubnetManager):
 
         return True if response['Subnets'] else False
 
-    async def __subnet_id(self, subnet_tag_name):
+    async def subnet_id(self, subnet_tag_name):
         """Get the subnet id
 
         Parameters
