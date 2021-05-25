@@ -1,5 +1,5 @@
 import boto3
-
+import json
 from src.interfaces.i_vpc_manager import IVpcManager
 from src.exception import VpcNameAlreadyExists
 
@@ -55,16 +55,21 @@ class AwsVpcManager(IVpcManager):
         Returns
         -------
         Boolean : True if the vpc exists
-        Exception : if raise_exception mode is enabled raise a exception
         """
         return True if await self.vpc_id(vpc_tag_name) else False
 
     async def describe_vpcs(self):
         """Retrieve all the vpcs
         """
-        filters = [{'Name': 'tag:Name', 'Values': ['*']}]
-        self.vpcs = list(self.resource.vpcs.filter(Filters=filters))
-        print(self.vpcs)
+        vpcs = list(self.resource.vpcs.filter(Filters=[]))
+        response = None
+        for vpc in vpcs:
+            response = self.client.describe_vpcs(
+                VpcIds=[
+                    vpc.id,
+                ]
+            )
+        return json.dumps(response, sort_keys=True, indent=4)
 
     async def vpc_id(self, vpc_tag_name):
         """Get the vpc id
