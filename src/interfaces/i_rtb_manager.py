@@ -19,7 +19,7 @@ class IRtbManager(ABC):
         pass
 
     @abstractmethod
-    def create_route(self, rtb_id, cidr_block, gateway_id, local_gateway_id):
+    def create_route_igw(self, rtb_id, cidr_block, gateway_id):
         pass
 
     @abstractmethod
