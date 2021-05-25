@@ -5,6 +5,11 @@ import src.aws_vpc_manager as vpc_manager
 
 class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
+        """
+        Setup test internet gateway properties and instantiate the internet gateway manager
+        + Setup test vpc properties and instantiate the vpc manager
+        :return:
+        """
         self.__igw_manager = igw_manager.AwsInternetGatewayManager()
         self.__vpc_manager = vpc_manager.AwsVpcManager()
         self.__igw_tag_name = "IGW_UNIT_TEST"
