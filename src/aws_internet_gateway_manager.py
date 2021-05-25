@@ -102,3 +102,10 @@ class AwsInternetGatewayManager:
                 raise Exception("The specified internet gateway is not attached to any vpc")
         else:
             raise Exception("The specified internet gateway does not exist")
+
+    async def internet_gateway_id(self, igw_tag_name):
+        if await self.exists(igw_tag_name):
+            filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
+            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+            return igws_list[0].id
+        raise Exception("The specified internet gateway does not exist")
