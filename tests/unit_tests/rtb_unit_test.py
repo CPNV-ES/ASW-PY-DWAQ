@@ -38,6 +38,7 @@ class UnitTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
         self.__subnet_id = await self.__subnet_manager.subnet_id(self.__subnet_tag_name)
 
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
+        await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
         self.__igw_id = await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
 
     async def test_create_rtb_nominal_case_success(self):
@@ -61,11 +62,16 @@ class UnitTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
         answer = await self.__rtb_manager.describe(self.__rtb_tag_name)
         self.assertTrue(answer['RouteTables'][0]["Routes"][1])
 
+    async def test_delete_rtb_nominal_case_success(self):
+        await self.__rtb_manager.delete(self.__rtb_id)
+        self.assertFalse(await self.__rtb_manager.get_rtb_id(self.__rtb_tag_name))
+
     async def asyncTearDown(self):
         """
         This method is used to clean class properties after each test method
         """
         if await self.__igw_manager.exists(self.__igw_tag_name):
+            await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
             await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
 
         if await self.__subnet_manager.exists(self.__subnet_tag_name):

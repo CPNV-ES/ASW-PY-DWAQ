@@ -67,7 +67,7 @@ class AwsInternetGatewayManager:
         :return:
         """
         if await self.exists(igw_tag_name):
-            vpc_manager = AwsVpcManager()
+            vpc_manager = AwsVpcManager(None, None)
 
             if await vpc_manager.exists(vpc_tag_name):
                 filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
