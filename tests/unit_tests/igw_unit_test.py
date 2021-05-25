@@ -126,6 +126,23 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(Exception):
             await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
 
+    async def test_igw_id_nominal_case_success(self):
+        """
+        This test method tests the internet gateway get id action.
+        We expected the exception "IgwDoesNotExist".
+        :return:
+        """
+        await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
+        self.assertTrue(await self.__igw_manager.internet_gateway_id(self.__igw_tag_name))
+
+    async def test_igw_id_does_not_exist_nominal_case_success(self):
+        """
+        This test method tests the internet gateway get id action.
+        :return:
+        """
+        with self.assertRaises(Exception):
+            await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
+
     async def asyncTearDown(self):
         """
         This method is used to clean class properties after each test method
