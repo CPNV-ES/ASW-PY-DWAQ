@@ -1,5 +1,5 @@
 import boto3
-from aws_vpc_manager import AwsVpcManager
+from src.aws_vpc_manager import AwsVpcManager
 
 
 class AwsInternetGatewayManager:
@@ -67,7 +67,7 @@ class AwsInternetGatewayManager:
         :return:
         """
         if await self.exists(igw_tag_name):
-            vpc_manager = AwsVpcManager("", "")
+            vpc_manager = AwsVpcManager()
 
             if await vpc_manager.exists(vpc_tag_name):
                 filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
@@ -76,6 +76,7 @@ class AwsInternetGatewayManager:
 
                 try:
                     self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
+                    return vpc_id
                 except Exception:
                     raise Exception("The specified internet gateway is already attached")
             else:
@@ -96,6 +97,7 @@ class AwsInternetGatewayManager:
             try:
                 attached_vpc_id = self.resource.InternetGateway(igws_list[0].id).attachments[0]["VpcId"]
                 self.resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
+                return attached_vpc_id
             except IndexError:
                 raise Exception("The specified internet gateway is not attached to any vpc")
         else:
