@@ -2,7 +2,7 @@ import unittest
 
 import src.aws_vpc_manager as aws_m
 
-from src.exception.vpc_exception import VpcNameAlreadyExists
+import src.exception.vpc_exception as vpc_exception
 
 
 class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
@@ -41,7 +41,7 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         # when
 
         # then : Exception must be thrown
-        with self.assertRaises(VpcNameAlreadyExists):
+        with self.assertRaises(vpc_exception.VpcNameAlreadyExists):
             await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
 
     async def test_delete_vpc_nominal_case_success(self):

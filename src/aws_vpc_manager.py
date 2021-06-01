@@ -28,7 +28,7 @@ class AwsVpcManager(IVpcManager):
             vpc.create_tags(Tags=[{"Key": "Name", "Value": vpc_tag_name}])
             vpc.wait_until_available()
         else:
-            raise vpc_exception.VpcNameAlreadyExists('AwsVpcManager', 'Already exists')
+            raise vpc_exception.VpcNameAlreadyExists
 
     async def delete_vpc(self, vpc_tag_name):
         """
@@ -43,7 +43,7 @@ class AwsVpcManager(IVpcManager):
             vpc_id = await self.vpc_id(vpc_tag_name)
             self._client.delete_vpc(VpcId=vpc_id)
         else:
-            raise vpc_exception.VpcNameDoesntExists('AwsVpcManager', 'Vpc "' + vpc_tag_name + '" doesn\'t exists')
+            raise vpc_exception.VpcNameDoesntExists
 
     async def exists(self, vpc_tag_name):
         """
@@ -87,4 +87,4 @@ class AwsVpcManager(IVpcManager):
         response = self._client.describe_vpcs(Filters=[{'Name': 'tag:Name', 'Values': [vpc_tag_name]}])
         if response['Vpcs']:
             return response['Vpcs'][0]['VpcId']
-        raise vpc_exception.VpcNameDoesntExists('AwsVpcManager', 'Vpc "' + vpc_tag_name + '" doesn\'t exists')
+        raise vpc_exception.VpcNameDoesntExists

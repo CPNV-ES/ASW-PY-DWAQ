@@ -27,7 +27,7 @@ class AwsRtbManager(IRtbManager):
                 ]
             )
         except Exception:
-            raise rtb_exception.AlreadyExists
+            raise rtb_exception.RtbAlreadyExists
 
     async def associate(self, rtb_id, subnet_id):
         """

@@ -1,7 +1,8 @@
 import unittest
 import src.aws_internet_gateway_manager as igw_manager
 import src.aws_vpc_manager as vpc_manager
-
+import src.exception.vpc_exception as vpc_exception
+import src.exception.igw_exception as igw_exception
 
 class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -34,7 +35,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(igw_exception.IgwNameAlreadyExists):
             await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
     async def test_exists_igw_nominal_case_success(self):
@@ -69,7 +70,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         We expected the exception "IgwDoesNotExists".
         :return:
         """
-        with self.assertRaises(Exception):
+        with self.assertRaises(igw_exception.IgwNameDoesntExists):
             await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
 
     async def test_attach_igw_to_vpc_nominal_case_success(self):
@@ -96,7 +97,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(igw_exception.IgwAlreadyAttach):
             await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
         await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
@@ -123,7 +124,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(igw_exception.IgwNotAttach):
             await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
 
     async def test_igw_id_nominal_case_success(self):
@@ -140,7 +141,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         This test method tests the internet gateway get id action.
         :return:
         """
-        with self.assertRaises(Exception):
+        with self.assertRaises(igw_exception.IgwNameDoesntExists):
             await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
 
     async def asyncTearDown(self):

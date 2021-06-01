@@ -1,5 +1,7 @@
 import boto3
 from src.aws_vpc_manager import AwsVpcManager
+import src.exception.vpc_exception as vpc_exception
+import src.exception.igw_exception as igw_exception
 
 
 class AwsInternetGatewayManager:
@@ -14,7 +16,7 @@ class AwsInternetGatewayManager:
         :return:
         """
         if await self.exists(tag_name):
-            raise Exception("The specified internet gateway already exist")
+            raise igw_exception.IgwNameAlreadyExists
         else:
             self.client.create_internet_gateway(
                 TagSpecifications=[
@@ -57,7 +59,7 @@ class AwsInternetGatewayManager:
 
             self.resource.InternetGateway(igws_list[0].id).delete()
         else:
-            raise Exception("The specified internet gateway does not exist")
+            raise igw_exception.IgwNameDoesntExists
 
     async def attach_to_vpc(self, igw_tag_name, vpc_tag_name):
         """
@@ -78,11 +80,11 @@ class AwsInternetGatewayManager:
                     self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
                     return vpc_id
                 except Exception:
-                    raise Exception("The specified internet gateway is already attached")
+                    raise igw_exception.IgwAlreadyAttach
             else:
-                raise Exception("The specified vpc does not exist")
+                raise vpc_exception.VpcNameDoesntExists
         else:
-            raise Exception("The specified internet gateway does not exist")
+            raise igw_exception.IgwNameDoesntExists
 
     async def detach_from_vpc(self, igw_tag_name):
         """
@@ -99,13 +101,13 @@ class AwsInternetGatewayManager:
                 self.resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
                 return attached_vpc_id
             except IndexError:
-                raise Exception("The specified internet gateway is not attached to any vpc")
+                raise igw_exception.IgwNotAttach
         else:
-            raise Exception("The specified internet gateway does not exist")
+            raise igw_exception.IgwNameDoesntExists
 
     async def internet_gateway_id(self, igw_tag_name):
         if await self.exists(igw_tag_name):
             filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
             igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
             return igws_list[0].id
-        raise Exception("The specified internet gateway does not exist")
+        raise igw_exception.IgwNameDoesntExists

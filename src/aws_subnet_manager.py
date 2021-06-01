@@ -25,8 +25,7 @@ class AwsSubnetManager(ISubnetManager):
             The id of the vpc
         """
         if await self.exists(subnet_tag_name):
-            raise subnet_exception.SubnetNameAlreadyExists('Subnet creation error!',
-                                                           'Subnet "' + subnet_tag_name + '" already exists')
+            raise subnet_exception.SubnetNameAlreadyExists()
         else:
             try:
                 subnet = self.resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
@@ -51,8 +50,7 @@ class AwsSubnetManager(ISubnetManager):
             subnet_id = await self.subnet_id(subnet_tag_name)
             self.client.delete_subnet(SubnetId=subnet_id)
         else:
-            raise subnet_exception.SubnetNameDoesntExists('Subnet delete error!',
-                                                          'Subnet "' + subnet_tag_name + '" doesn\'t exists')
+            raise subnet_exception.SubnetNameDoesntExists()
 
     async def exists(self, subnet_tag_name):
         """
@@ -86,5 +84,4 @@ class AwsSubnetManager(ISubnetManager):
         response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [subnet_tag_name]}])
         if response['Subnets']:
             return response['Subnets'][0]['SubnetId']
-        raise subnet_exception.SubnetNameDoesntExists('Subnet delete error!',
-                                                      'Subnet "' + subnet_tag_name + '" doesn\'t exists')
+        raise subnet_exception.SubnetNameDoesntExists()
