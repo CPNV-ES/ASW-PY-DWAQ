@@ -4,11 +4,8 @@ from src.interfaces.i_vpc_manager import IVpcManager
 import src.exception.vpc_exception as vpc_exception
 
 
-
 class AwsVpcManager(IVpcManager):
-    def __init__(self, aws_profile_name, aws_region_end_point):
-        self.aws_profile_name = aws_profile_name
-        self.aws_region_end_point = aws_region_end_point
+    def __init__(self):
         # AmazonEc2Client
         self.client = boto3.client('ec2')
         self.resource = boto3.resource('ec2')
@@ -16,7 +13,8 @@ class AwsVpcManager(IVpcManager):
         self.vpcs = None
 
     async def create_vpc(self, vpc_tag_name, cidr_block):
-        """Create a new vpc
+        """
+        Create a new vpc
 
         Parameters
         ----------
@@ -33,7 +31,8 @@ class AwsVpcManager(IVpcManager):
             raise vpc_exception.VpcNameAlreadyExists('AwsVpcManager', 'Already exists')
 
     async def delete_vpc(self, vpc_tag_name):
-        """Delete a vpc
+        """
+        Delete a vpc
 
         Parameters
         ----------
@@ -47,7 +46,8 @@ class AwsVpcManager(IVpcManager):
             raise vpc_exception.VpcNameDoesntExists('AwsVpcManager', 'Vpc "' + vpc_tag_name + '" doesn\'t exists')
 
     async def exists(self, vpc_tag_name):
-        """Verify if the vpc exists
+        """
+        Verify if the vpc exists
 
         Parameters
         ----------
@@ -62,7 +62,8 @@ class AwsVpcManager(IVpcManager):
         return True if response['Vpcs'] else False
 
     async def describe_vpcs(self):
-        """Retrieve all the vpcs
+        """
+        Retrieve all the vpcs
         """
         vpcs = list(self.resource.vpcs.filter(Filters=[]))
         response = None
@@ -75,7 +76,8 @@ class AwsVpcManager(IVpcManager):
         return json.dumps(response, sort_keys=True, indent=4)
 
     async def vpc_id(self, vpc_tag_name):
-        """Get the vpc id
+        """
+        Get the vpc id
 
         Parameters
         ----------

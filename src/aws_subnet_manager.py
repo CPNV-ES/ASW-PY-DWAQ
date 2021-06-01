@@ -4,15 +4,14 @@ import src.exception.subnet_exception as subnet_exception
 
 
 class AwsSubnetManager(ISubnetManager):
-    def __init__(self, aws_profile_name, aws_region_end_point):
-        self.aws_profile_name = aws_profile_name
-        self.aws_region_end_point = aws_region_end_point
+    def __init__(self):
         # AmazonEc2Client
         self.client = boto3.client('ec2')
         self.resource = boto3.resource('ec2')
 
     async def create_subnet(self, subnet_tag_name, cidr_block, vpc_id):
-        """Create a new subnet
+        """
+        Create a new subnet
 
         Parameters
         ----------
@@ -31,7 +30,8 @@ class AwsSubnetManager(ISubnetManager):
             subnet.create_tags(Tags=[{'Key': 'Name', 'Value': subnet_tag_name}])
 
     async def delete_subnet(self, subnet_tag_name):
-        """Delete a subnet
+        """
+        Delete a subnet
 
         Parameters
         ----------
@@ -46,7 +46,8 @@ class AwsSubnetManager(ISubnetManager):
                                                           'Subnet "' + subnet_tag_name + '" doesn\'t exists')
 
     async def exists(self, subnet_tag_name):
-        """Verify if the subnet exists
+        """
+        Verify if the subnet exists
 
         Parameters
         ----------
@@ -62,7 +63,8 @@ class AwsSubnetManager(ISubnetManager):
         return True if response['Subnets'] else False
 
     async def __subnet_id(self, subnet_tag_name):
-        """Get the subnet id
+        """
+        Get the subnet id
 
         Parameters
         ----------
