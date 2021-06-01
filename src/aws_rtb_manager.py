@@ -10,6 +10,9 @@ class AwsRtbManager(IRtbManager):
         self.client = boto3.client('ec2')
 
     async def create(self, rtb_tag_name, vpc_id):
+        """
+        Create the specified route table associated to the vpc
+        """
         try:
             self.client.create_route_table(
                 VpcId=vpc_id,
@@ -25,36 +28,46 @@ class AwsRtbManager(IRtbManager):
             )
         except Exception:
             raise rtb_exception.AlreadyExists
-        pass
 
     async def associate(self, rtb_id, subnet_id):
+        """
+        Associate the specified route table with the subnet
+        """
         self.client.associate_route_table(
             RouteTableId=rtb_id,
             SubnetId=subnet_id,
         )
-        pass
 
     async def disassociate(self, association_id):
+        """
+        Dissociate the specified route table
+        """
         self.client.disassociate_route_table(
             AssociationId=association_id,
         )
-        pass
 
     async def delete(self, rtb_id):
+        """
+        Delete the specified route table
+        """
         self.client.delete_route_table(
             RouteTableId=rtb_id,
         )
-        pass
 
     async def create_route_igw(self, rtb_id, cidr_block, gateway_id):
+        """
+        Create the specified route table with the internet gateway
+        """
         self.client.create_route(
             DestinationCidrBlock=cidr_block,
             RouteTableId=rtb_id,
             GatewayId=gateway_id,
         )
-        pass
 
     async def describe(self, rtb_tag_name):
+        """
+        Describe the specified route table
+        """
         return self.client.describe_route_tables(
             Filters=[
                 {
@@ -65,9 +78,17 @@ class AwsRtbManager(IRtbManager):
         )
 
     async def exists(self, rtb_tag_name):
+        """
+        Check if the specified route table exists
+        :return: Boolean
+        """
         return True if await self.get_rtb_id(rtb_tag_name) else False
 
     async def get_assoc_id(self, rtb_tag_name):
+        """
+        Get the specified route table association id
+        :return: Int
+        """
         response = await self.describe(rtb_tag_name)
         try:
             return response['RouteTables'][0]["Associations"][0]["RouteTableAssociationId"]
@@ -75,6 +96,10 @@ class AwsRtbManager(IRtbManager):
             return None
 
     async def get_rtb_id(self, rtb_tag_name):
+        """
+        Get the specified route table id
+        :return: Int
+        """
         response = await self.describe(rtb_tag_name)
         try:
             return response['RouteTables'][0]["RouteTableId"]
