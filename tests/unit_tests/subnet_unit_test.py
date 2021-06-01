@@ -67,7 +67,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         # given
         await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
-        with self.assertRaises(subnet_exception.SubnetCidrBlockException):
+        with self.assertRaises((subnet_exception.SubnetCidrBlockException, botocore.exceptions.ClientError)):
             await self.__subnet_manager.create_subnet(self.__subnet_tag_name_2, self.__subnet_cidr_block, self.__vpc_id)
         # then : Exception must be thrown
 
