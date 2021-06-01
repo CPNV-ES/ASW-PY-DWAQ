@@ -40,27 +40,52 @@ class UnitTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
         self.__igw_id = await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
 
     async def test_create_rtb_nominal_case_success(self):
+        """
+        This test method tests the route table creation action.
+        This is the nominal case (all parameters are correctly set).
+        :return:
+        """
         await self.__rtb_manager.delete(self.__rtb_id)
         await self.__rtb_manager.create(self.__rtb_tag_name, self.__vpc_id)
         self.__rtb_id = await self.__rtb_manager.get_rtb_id(self.__rtb_tag_name)
         self.assertTrue(await self.__rtb_manager.exists(self.__rtb_tag_name))
 
     async def test_associate_subnet_nominal_case_success(self):
+        """
+        This test method tests the route table association action.
+        This is the nominal case (all parameters are correctly set).
+        :return:
+        """
         await self.__rtb_manager.associate(await self.__rtb_manager.get_rtb_id(self.__rtb_tag_name), self.__subnet_id)
         self.assertTrue(await self.__rtb_manager.get_assoc_id(self.__rtb_tag_name))
         await self.__rtb_manager.disassociate(await self.__rtb_manager.get_assoc_id(self.__rtb_tag_name))
 
     async def test_disassociate_subnet_nominal_case_success(self):
+        """
+        This test method tests the route table dissociation action.
+        This is the nominal case (all parameters are correctly set).
+        :return:
+        """
         await self.__rtb_manager.associate(await self.__rtb_manager.get_rtb_id(self.__rtb_tag_name), self.__subnet_id)
         await self.__rtb_manager.disassociate(await self.__rtb_manager.get_assoc_id(self.__rtb_tag_name))
         self.assertFalse(await self.__rtb_manager.get_assoc_id(self.__rtb_tag_name))
 
     async def test_create_route_igw_nominal_case_success(self):
+        """
+        This test method tests the route table igw creation action.
+        This is the nominal case (all parameters are correctly set).
+        :return:
+        """
         await self.__rtb_manager.create_route_igw(self.__rtb_id, self.__igw_cidr_block, self.__igw_id)
         answer = await self.__rtb_manager.describe(self.__rtb_tag_name)
         self.assertTrue(answer['RouteTables'][0]["Routes"][1])
 
     async def test_delete_rtb_nominal_case_success(self):
+        """
+        This test method tests the route table deletion action.
+        This is the nominal case (all parameters are correctly set).
+        :return:
+        """
         await self.__rtb_manager.delete(self.__rtb_id)
         self.assertFalse(await self.__rtb_manager.get_rtb_id(self.__rtb_tag_name))
 
