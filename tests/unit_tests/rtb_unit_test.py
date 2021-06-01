@@ -5,8 +5,6 @@ import src.aws_rtb_manager as rtb_m
 import src.aws_internet_gateway_manager as igw_m
 import src.aws_subnet_manager as subnet_m
 
-import src.exception.rtb_exception as rtb_exception
-
 
 class UnitTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
 
@@ -17,8 +15,8 @@ class UnitTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
         self.__igw_tag_name = "IGW_UNIT_TEST"
 
         self.__rtb_manager = rtb_m.AwsRtbManager()
-        self.__vpc_manager = vpc_m.AwsVpcManager(None, None)
-        self.__subnet_manager = subnet_m.AwsSubnetManager(None, None)
+        self.__vpc_manager = vpc_m.AwsVpcManager()
+        self.__subnet_manager = subnet_m.AwsSubnetManager()
         self.__igw_manager = igw_m.AwsInternetGatewayManager()
 
         self.__rtb_id = None

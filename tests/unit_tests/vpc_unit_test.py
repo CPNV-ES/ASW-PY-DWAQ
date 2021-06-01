@@ -16,7 +16,7 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         """
         self.__profile_name = "VIR1_INFRA_DEPLOYMENT"
         self.__region_end_point = "ap-south-1"
-        self.__vpc_manager = aws_m.AwsVpcManager(self.__profile_name, self.__region_end_point)
+        self.__vpc_manager = aws_m.AwsVpcManager()
         self.__vpc_tag_name = "VIR1_SCRUMMASTER"
         self.__cidr_block = "10.0.0.0/16"
 

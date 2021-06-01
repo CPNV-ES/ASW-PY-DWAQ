@@ -18,11 +18,11 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         self.__profile_name = "VIR1_INFRA_DEPLOYMENT"
         self.__region_end_point = "ap-south-1"
 
-        self.__subnet_manager = subnet_manager.AwsSubnetManager(self.__profile_name, self.__region_end_point)
+        self.__subnet_manager = subnet_manager.AwsSubnetManager()
         self.__subnet_tag_name = "test_subnet"
         self.__subnet_cidr_block = "10.0.2.0/24"
 
-        self.__vpc_manager = vpc_manager.AwsVpcManager(self.__profile_name, self.__region_end_point)
+        self.__vpc_manager = vpc_manager.AwsVpcManager()
         self.__vpc_tag_name = "vpc_test_subnet"
         self.__vpc_cidr_block = "10.0.0.0/16"
 

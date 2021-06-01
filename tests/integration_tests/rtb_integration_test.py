@@ -17,8 +17,8 @@ class IntegrationTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
         self.__igw_tag_name = "RTB_INTEGRATION_TEST"
 
         self.__rtb_manager = rtb_m.AwsRtbManager()
-        self.__vpc_manager = vpc_m.AwsVpcManager(None, None)
-        self.__subnet_manager = subnet_m.AwsSubnetManager(None, None)
+        self.__vpc_manager = vpc_m.AwsVpcManager()
+        self.__subnet_manager = subnet_m.AwsSubnetManager()
         self.__igw_manager = igw_m.AwsInternetGatewayManager()
 
         self.__rtb_id = None
