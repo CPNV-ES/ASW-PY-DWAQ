@@ -3,6 +3,7 @@ import unittest
 import src.aws_subnet_manager as subnet_manager
 import src.aws_vpc_manager as vpc_manager
 import src.exception.subnet_exception as subnet_exception
+import botocore
 
 
 class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
@@ -20,6 +21,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
 
         self.__subnet_manager = subnet_manager.AwsSubnetManager()
         self.__subnet_tag_name = "test_subnet"
+        self.__subnet_tag_name_2 = "test_subnet_2"
         self.__subnet_cidr_block = "10.0.2.0/24"
 
         self.__vpc_manager = vpc_manager.AwsVpcManager()
@@ -51,8 +53,22 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         # given
         await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
-        with self.assertRaises(subnet_exception.SubnetNameAlreadyExists):
+        with self.assertRaises((subnet_exception.SubnetNameAlreadyExists, botocore.exceptions.ClientError)):
             await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
+        # then : Exception must be thrown
+
+    async def test_create_subnet_cidr_block_already_exists_throw_exception(self):
+        """
+
+        This test method tests the subnet creation action.
+        We expected the exception "SubnetCidrBlockException".
+        :return: The return type is mandatory when using async Task test method
+        """
+        # given
+        await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
+        # when
+        with self.assertRaises(subnet_exception.SubnetCidrBlockException):
+            await self.__subnet_manager.create_subnet(self.__subnet_tag_name_2, self.__subnet_cidr_block, self.__vpc_id)
         # then : Exception must be thrown
 
     async def test_delete_subnet_nominal_case_success(self):
