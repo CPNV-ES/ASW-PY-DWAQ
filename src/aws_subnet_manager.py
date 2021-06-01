@@ -1,6 +1,8 @@
 import boto3
+import botocore
 from src.interfaces.i_subnet_manager import ISubnetManager
 import src.exception.subnet_exception as subnet_exception
+import re
 
 
 class AwsSubnetManager(ISubnetManager):
@@ -27,8 +29,15 @@ class AwsSubnetManager(ISubnetManager):
             raise subnet_exception.SubnetNameAlreadyExists('Subnet creation error!',
                                                            'Subnet "' + subnet_tag_name + '" already exists')
         else:
-            subnet = self.resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
-            subnet.create_tags(Tags=[{'Key': 'Name', 'Value': subnet_tag_name}])
+            try:
+                subnet = self.resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
+                subnet.create_tags(Tags=[{'Key': 'Name', 'Value': subnet_tag_name}])
+            # Catch les exceptions du au CidrBlock
+            except botocore.exceptions.ClientError as err:
+                if re.search('CidrBlock', err.response['Error']['Message']):
+                    raise subnet_exception.SubnetCidrBlockException("CIDR exception", err.response['Error']['Message'])
+                else:
+                    raise err
 
     async def delete_subnet(self, subnet_tag_name):
         """Delete a subnet
