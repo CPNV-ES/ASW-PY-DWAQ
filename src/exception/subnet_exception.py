@@ -4,8 +4,8 @@ class SubnetNameAlreadyExists(Exception):
         self.message = message
 
 
-class SubnetNameDoesntExists(Exception):
-    def __init__(self, expression="SubnetNameDoesntExists", message="Subnet doesn't exists!"):
+class SubnetNameDoesNotExist(Exception):
+    def __init__(self, expression="SubnetNameDoesNotExist", message="Subnet doesn't exists!"):
         self.expression = expression
         self.message = message
 
