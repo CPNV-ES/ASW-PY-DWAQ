@@ -1,15 +1,16 @@
 import unittest
 import src.aws_internet_gateway_manager as igw_manager
 import src.aws_vpc_manager as vpc_manager
-import src.exception.vpc_exception as vpc_exception
 import src.exception.igw_exception as igw_exception
+
 
 class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         """
         Setup test internet gateway properties and instantiate the internet gateway manager
         + Setup test vpc properties and instantiate the vpc manager
-        :return:
+        @return: none
+        @rtype: none
         """
         self.__igw_manager = igw_manager.AwsInternetGatewayManager()
         self.__vpc_manager = vpc_manager.AwsVpcManager()
@@ -21,7 +22,8 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the internet gateway creation action.
         This is the nominal case (all parameters are correctly set).
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
@@ -31,7 +33,8 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the internet gateway creation action.
         We expected the exception "IgwAlreadyExists".
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
@@ -41,7 +44,8 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     async def test_exists_igw_nominal_case_success(self):
         """
         This test method tests the exist action.
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
@@ -50,14 +54,16 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     async def test_does_not_exist_igw_nominal_case_success(self):
         """
         This test method tests the does not exist action.
-        :return:
+        @return: none
+        @rtype: none
         """
         self.assertFalse(await self.__igw_manager.exists(self.__igw_tag_name))
 
     async def test_delete_igw_nominal_case_success(self):
         """
         This test method tests the internet gateway deletion action.
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
@@ -68,15 +74,17 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the internet gateway deletion action.
         We expected the exception "IgwDoesNotExists".
-        :return:
+        @return: none
+        @rtype: none
         """
-        with self.assertRaises(igw_exception.IgwNameDoesntExists):
+        with self.assertRaises(igw_exception.IgwNameDoesNotExist):
             await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
 
     async def test_attach_igw_to_vpc_nominal_case_success(self):
         """
         This test method tests the internet gateway attach action.
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
@@ -91,13 +99,14 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the internet gateway attach action.
         We expected the exception "IgwAlreadyAttached".
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
-        with self.assertRaises(igw_exception.IgwAlreadyAttach):
+        with self.assertRaises(igw_exception.IgwAlreadyAttached):
             await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
         await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
@@ -106,7 +115,8 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the internet gateway detach action.
         We expected the exception "IgwNotAttached".
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
@@ -119,19 +129,21 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     async def test_detach_unattached_igw_from_vpc_throw_exception(self):
         """
         This test method tests the internet gateway detach action.
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
 
-        with self.assertRaises(igw_exception.IgwNotAttach):
+        with self.assertRaises(igw_exception.IgwNotAttached):
             await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
 
     async def test_igw_id_nominal_case_success(self):
         """
         This test method tests the internet gateway get id action.
         We expected the exception "IgwDoesNotExist".
-        :return:
+        @return: none
+        @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         self.assertTrue(await self.__igw_manager.internet_gateway_id(self.__igw_tag_name))
@@ -139,14 +151,17 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     async def test_igw_id_does_not_exist_nominal_case_success(self):
         """
         This test method tests the internet gateway get id action.
-        :return:
+        @return: none
+        @rtype: none
         """
-        with self.assertRaises(igw_exception.IgwNameDoesntExists):
+        with self.assertRaises(igw_exception.IgwNameDoesNotExist):
             await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
 
     async def asyncTearDown(self):
         """
         This method is used to clean class properties after each test method
+        @return: none
+        @rtype: none
         """
         if await self.__igw_manager.exists(self.__igw_tag_name):
             await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
