@@ -111,8 +111,14 @@ class AwsRtbManager(IRtbManager):
         main_route_table = self.client.describe_route_tables(
             Filters=[
                 {
+                    'Name': 'vpc-id', 'Values': [vpc_id]
+                },
+                {
                     'Name': 'association.main', 'Values': ["true"]
 
                 }
-            ])  # You can try "false" too
-        pass
+            ])
+        try:
+            return main_route_table['RouteTables'][0]['Associations'][0]['RouteTableId']
+        except IndexError:
+            return None
