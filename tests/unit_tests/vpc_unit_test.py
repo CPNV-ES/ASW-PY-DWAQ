@@ -13,6 +13,8 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         """
         Setup test vpc properties and instantiate the vpc manager
+        @return: none
+        @rtype: none
         """
         self.__profile_name = "VIR1_INFRA_DEPLOYMENT"
         self.__region_end_point = "ap-south-1"
@@ -24,7 +26,8 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the vpc creation action.
         This is the nominal case (all parameters are correctly set).
-        :return: The return type is mandatory when using async Task test method
+        @return: none
+        @rtype: none
         """
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
 
@@ -34,20 +37,21 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         """
         This test method tests the vpc creation action.
         We expected the exception "VpcAlreadyExists".
-        :return: The return type is mandatory when using async Task test method
+        @return: none
+        @rtype: none
         """
         # given
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         # when
-
-        # then : Exception must be thrown
         with self.assertRaises(vpc_exception.VpcNameAlreadyExists):
             await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        # then : Exception must be thrown
 
     async def test_delete_vpc_nominal_case_success(self):
         """
         This test method tests the vpc deletion action.
-        :return: The return type is mandatory when using async Task test method
+        @return: none
+        @rtype: none
         """
         # given
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
@@ -59,7 +63,8 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
     async def test_exists_vpc_nominal_case_success(self):
         """
         This test method tests the exist action.
-        :return: The return type is mandatory when using async Task test method
+        @return: none
+        @rtype: none
         """
         # given
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
@@ -70,6 +75,8 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self):
         """
         This method is used to clean class properties after each test method
+        @return: none
+        @rtype: none
         """
         if await self.__vpc_manager.exists(self.__vpc_tag_name):
             await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)

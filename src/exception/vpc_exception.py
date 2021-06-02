@@ -4,7 +4,7 @@ class VpcNameAlreadyExists(Exception):
         self.message = message
 
 
-class VpcNameDoesntExists(Exception):
-    def __init__(self, expression="VpcNameDoesntExists", message="Vpc doesn't exists!"):
+class VpcNameDoesNotExist(Exception):
+    def __init__(self, expression="VpcNameDoesNotExist", message="Vpc doesn't exists!"):
         self.expression = expression
         self.message = message

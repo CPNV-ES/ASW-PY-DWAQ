@@ -97,7 +97,7 @@ class AwsInternetGatewayManager:
                 except Exception:
                     raise igw_exception.IgwAlreadyAttached
             else:
-                raise vpc_exception.VpcNameDoesntExists
+                raise vpc_exception.VpcNameDoesNotExist
         else:
             raise igw_exception.IgwNameDoesNotExist
 
