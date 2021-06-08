@@ -12,9 +12,9 @@ class IntegrationTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self):
         self.__rtb_tag_name = "RTB_INTEGRATION_TEST"
-        self.__vpc_tag_name = "RTB_INTEGRATION_TEST"
-        self.__subnet_tag_name = "RTB_INTEGRATION_TEST"
-        self.__igw_tag_name = "RTB_INTEGRATION_TEST"
+        self.__vpc_tag_name = "VPC_INTEGRATION_TEST"
+        self.__subnet_tag_name = "SUBNET_INTEGRATION_TEST"
+        self.__igw_tag_name = "IGW_INTEGRATION_TEST"
 
         self.__rtb_manager = rtb_m.AwsRtbManager()
         self.__vpc_manager = vpc_m.AwsVpcManager()

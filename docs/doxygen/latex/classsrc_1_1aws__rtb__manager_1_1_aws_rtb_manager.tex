@@ -1,0 +1,151 @@
+\hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager}{}\doxysection{src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager Class Reference}
+\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager}\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+Inheritance diagram for src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ac442e1de334f38eedc8e23aecb80c097}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ac442e1de334f38eedc8e23aecb80c097}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad50d0e4d73de8b6c2e5d30f7f017c815}{create}} (self, rtb\+\_\+tag\+\_\+name, vpc\+\_\+id)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a24b7a32c0d043bd94f3934c6f5332f1b}{associate}} (self, rtb\+\_\+id, subnet\+\_\+id)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad409288463d95d479d3b1206a0b07e56}{disassociate}} (self, association\+\_\+id)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a1ffd8aad8f249fae7ae13bb451476f83}{delete}} (self, rtb\+\_\+id)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_acc7a91b7d0e9b299cbf27c92a5105aa9}{create\+\_\+route\+\_\+igw}} (self, rtb\+\_\+id, cidr\+\_\+block, gateway\+\_\+id)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a87e12d1b6a37365a095ff2d851b9566c}{describe}} (self, rtb\+\_\+tag\+\_\+name)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a927db7afecc81e89a7c0ce4a395b68c9}{exists}} (self, rtb\+\_\+tag\+\_\+name)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436170b694acf5aabcbc85b26d1}{get\+\_\+assoc\+\_\+id}} (self, rtb\+\_\+tag\+\_\+name)
+\item 
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}{get\+\_\+rtb\+\_\+id}} (self, rtb\+\_\+tag\+\_\+name)
+\item 
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}} 
+def {\bfseries get\+\_\+main\+\_\+rtb\+\_\+id\+\_\+from\+\_\+vpc} (self, vpc\+\_\+id)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a223ff86974e3e7fd485ed1e454c2199c}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a223ff86974e3e7fd485ed1e454c2199c}} 
+{\bfseries client}
+\item 
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a92b7d245cd45a29125e61e360eaf64e4}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a92b7d245cd45a29125e61e360eaf64e4}} 
+{\bfseries resource}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a24b7a32c0d043bd94f3934c6f5332f1b}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a24b7a32c0d043bd94f3934c6f5332f1b}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!associate@{associate}}
+\index{associate@{associate}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{associate()}{associate()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+associate (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id,  }\item[{}]{subnet\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Associate the specified route table with the subnet
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad50d0e4d73de8b6c2e5d30f7f017c815}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad50d0e4d73de8b6c2e5d30f7f017c815}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!create@{create}}
+\index{create@{create}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+create (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name,  }\item[{}]{vpc\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create the specified route table associated to the vpc
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_acc7a91b7d0e9b299cbf27c92a5105aa9}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_acc7a91b7d0e9b299cbf27c92a5105aa9}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!create\_route\_igw@{create\_route\_igw}}
+\index{create\_route\_igw@{create\_route\_igw}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{create\_route\_igw()}{create\_route\_igw()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+create\+\_\+route\+\_\+igw (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id,  }\item[{}]{cidr\+\_\+block,  }\item[{}]{gateway\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create the specified route table with the internet gateway
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a1ffd8aad8f249fae7ae13bb451476f83}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a1ffd8aad8f249fae7ae13bb451476f83}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!delete@{delete}}
+\index{delete@{delete}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{delete()}{delete()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+delete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Delete the specified route table
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a87e12d1b6a37365a095ff2d851b9566c}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a87e12d1b6a37365a095ff2d851b9566c}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!describe@{describe}}
+\index{describe@{describe}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{describe()}{describe()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+describe (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Describe the specified route table
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad409288463d95d479d3b1206a0b07e56}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ad409288463d95d479d3b1206a0b07e56}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!disassociate@{disassociate}}
+\index{disassociate@{disassociate}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{disassociate()}{disassociate()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+disassociate (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{association\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Dissociate the specified route table
+\end{DoxyVerb}
+ 
+
+Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager}{src.\+interfaces.\+i\+\_\+rtb\+\_\+manager.\+IRtb\+Manager}}.
+
+\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a927db7afecc81e89a7c0ce4a395b68c9}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a927db7afecc81e89a7c0ce4a395b68c9}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!exists@{exists}}
+\index{exists@{exists}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{exists()}{exists()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+exists (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Check if the specified route table exists
+:return: Boolean
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436170b694acf5aabcbc85b26d1}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436170b694acf5aabcbc85b26d1}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!get\_assoc\_id@{get\_assoc\_id}}
+\index{get\_assoc\_id@{get\_assoc\_id}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{get\_assoc\_id()}{get\_assoc\_id()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+get\+\_\+assoc\+\_\+id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the specified route table association id
+:return: Int
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!get\_rtb\_id@{get\_rtb\_id}}
+\index{get\_rtb\_id@{get\_rtb\_id}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{get\_rtb\_id()}{get\_rtb\_id()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+get\+\_\+rtb\+\_\+id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the specified route table id
+:return: Int
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/aws\+\_\+rtb\+\_\+manager.\+py\end{DoxyCompactItemize}

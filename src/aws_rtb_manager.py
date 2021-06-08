@@ -8,6 +8,8 @@ class AwsRtbManager(IRtbManager):
     def __init__(self):
         # AmazonEc2Client
         self.client = boto3.client('ec2', use_ssl=False)
+        self.resource = boto3.resource('ec2', use_ssl=False)
+
 
     async def create(self, rtb_tag_name, vpc_id):
         """
@@ -27,7 +29,7 @@ class AwsRtbManager(IRtbManager):
                 ]
             )
         except Exception:
-            raise rtb_exception.AlreadyExists
+            raise rtb_exception.RtbAlreadyExists
 
     async def associate(self, rtb_id, subnet_id):
         """
@@ -103,5 +105,21 @@ class AwsRtbManager(IRtbManager):
         response = await self.describe(rtb_tag_name)
         try:
             return response['RouteTables'][0]["RouteTableId"]
+        except IndexError:
+            return None
+
+    async def get_main_rtb_id_from_vpc(self, vpc_id):
+        main_route_table = self.client.describe_route_tables(
+            Filters=[
+                {
+                    'Name': 'vpc-id', 'Values': [vpc_id]
+                },
+                {
+                    'Name': 'association.main', 'Values': ["true"]
+
+                }
+            ])
+        try:
+            return main_route_table['RouteTables'][0]['Associations'][0]['RouteTableId']
         except IndexError:
             return None
