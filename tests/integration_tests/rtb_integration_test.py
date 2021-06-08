@@ -5,8 +5,6 @@ import src.aws_rtb_manager as rtb_m
 import src.aws_internet_gateway_manager as igw_m
 import src.aws_subnet_manager as subnet_m
 
-import src.exception.rtb_exception as rtb_exception
-
 
 class IntegrationTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
 

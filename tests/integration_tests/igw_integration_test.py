@@ -4,7 +4,7 @@ import src.aws_internet_gateway_manager as igw_manager
 import src.aws_vpc_manager as vpc_manager
 
 
-class MyTestCase(unittest.IsolatedAsyncioTestCase):
+class IntegrationTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         """
         Setup test internet gateway properties and instantiate the internet gateway manager
