@@ -106,8 +106,7 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self)</t
 <tr class="separator:a351ff436170b694acf5aabcbc85b26d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada34a0760275483003c907be4fb58146"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager.html#ada34a0760275483003c907be4fb58146">get_rtb_id</a> (self, rtb_tag_name)</td></tr>
 <tr class="separator:ada34a0760275483003c907be4fb58146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13815c70b13a1667a51527b8ec616c8e"><td class="memItemLeft" align="right" valign="top"><a id="a13815c70b13a1667a51527b8ec616c8e"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>get_main_rtb_id_from_vpc</b> (self, vpc_id)</td></tr>
+<tr class="memitem:a13815c70b13a1667a51527b8ec616c8e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager.html#a13815c70b13a1667a51527b8ec616c8e">get_main_rtb_id_from_vpc</a> (self, vpc_id)</td></tr>
 <tr class="separator:a13815c70b13a1667a51527b8ec616c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -151,7 +150,13 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Associate the specified route table with the subnet
+<pre class="fragment">Associate the specified route table to the specified subnet
+@param rtb_id: id of the route table for the association
+@type rtb_id: int
+@param subnet_id: id of the subnet for the association
+@type subnet_id: int
+@return: none
+@rtype: none
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -188,7 +193,14 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Create the specified route table associated to the vpc
+<pre class="fragment">Create the specified route table
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@param vpc_id: the id of the vpc to attach
+@type vpc_id: int
+@return: none
+@rtype: none
+@raise: exception when the route table already exists
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -231,7 +243,15 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Create the specified route table with the internet gateway
+<pre class="fragment">Create route with a gateway
+@param rtb_id: id of the route table to use it to create route
+@type rtb_id: int
+@param cidr_block: IPv4 CIDR block for the route
+@type cidr_block: str
+@param gateway_id: id of gateway to attach it to the route
+@type gateway_id: int
+@return: none
+@rtype: none
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -262,7 +282,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Delete the specified route table
+<pre class="fragment">Delete the specified rtb
+@param rtb_id: id of the route table for the deletion
+@type rtb_id: int
+@return: none
+@rtype: none
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -293,7 +317,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Describe the specified route table
+<pre class="fragment">Describe a specified route table using the name
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Route table properties
+@rtype: array
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -324,7 +352,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Dissociate the specified route table
+<pre class="fragment">Disassociate the specified association
+@param association_id: id of the association
+@type association_id: int
+@return: none
+@rtype: none
 </pre> 
 <p>Reimplemented from <a class="el" href="classsrc_1_1interfaces_1_1i__rtb__manager_1_1_i_rtb_manager.html">src.interfaces.i_rtb_manager.IRtbManager</a>.</p>
 
@@ -355,8 +387,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Check if the specified route table exists
-:return: Boolean
+<pre class="fragment">Check if the specified route table using the name exists
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Boolean
+@rtype: bool
 </pre> 
 </div>
 </div>
@@ -385,8 +420,46 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Get the specified route table association id
-:return: Int
+<pre class="fragment">Get the association id
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Id of the association
+@rtype: int
+@raise: exception when the route table doesnt exists
+</pre> 
+</div>
+</div>
+<a id="a13815c70b13a1667a51527b8ec616c8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13815c70b13a1667a51527b8ec616c8e">&#9670;&nbsp;</a></span>get_main_rtb_id_from_vpc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.aws_rtb_manager.AwsRtbManager.get_main_rtb_id_from_vpc </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>vpc_id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get the main route table id attached to a specified vpc
+@param vpc_id: id of the vpc
+@type vpc_id: int
+@return: Id of the main route table
+@rtype: int
+@raise: exception when the route table doesnt exists
 </pre> 
 </div>
 </div>
@@ -415,8 +488,12 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Get the specified route table id
-:return: Int
+<pre class="fragment">Get the route table id
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Id of the route table
+@rtype: int
+@raise: exception when the route table doesnt exists
 </pre> 
 </div>
 </div>

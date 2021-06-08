@@ -30,8 +30,7 @@ def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436
 \item 
 def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}{get\+\_\+rtb\+\_\+id}} (self, rtb\+\_\+tag\+\_\+name)
 \item 
-\mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}} 
-def {\bfseries get\+\_\+main\+\_\+rtb\+\_\+id\+\_\+from\+\_\+vpc} (self, vpc\+\_\+id)
+def \mbox{\hyperlink{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}{get\+\_\+main\+\_\+rtb\+\_\+id\+\_\+from\+\_\+vpc}} (self, vpc\+\_\+id)
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -51,7 +50,13 @@ def {\bfseries get\+\_\+main\+\_\+rtb\+\_\+id\+\_\+from\+\_\+vpc} (self, vpc\+\_
 \doxysubsubsection{\texorpdfstring{associate()}{associate()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+associate (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id,  }\item[{}]{subnet\+\_\+id }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Associate the specified route table with the subnet
+\begin{DoxyVerb}Associate the specified route table to the specified subnet
+@param rtb_id: id of the route table for the association
+@type rtb_id: int
+@param subnet_id: id of the subnet for the association
+@type subnet_id: int
+@return: none
+@rtype: none
 \end{DoxyVerb}
  
 
@@ -63,7 +68,14 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{create()}{create()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+create (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name,  }\item[{}]{vpc\+\_\+id }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Create the specified route table associated to the vpc
+\begin{DoxyVerb}Create the specified route table
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@param vpc_id: the id of the vpc to attach
+@type vpc_id: int
+@return: none
+@rtype: none
+@raise: exception when the route table already exists
 \end{DoxyVerb}
  
 
@@ -75,7 +87,15 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{create\_route\_igw()}{create\_route\_igw()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+create\+\_\+route\+\_\+igw (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id,  }\item[{}]{cidr\+\_\+block,  }\item[{}]{gateway\+\_\+id }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Create the specified route table with the internet gateway
+\begin{DoxyVerb}Create route with a gateway
+@param rtb_id: id of the route table to use it to create route
+@type rtb_id: int
+@param cidr_block: IPv4 CIDR block for the route
+@type cidr_block: str
+@param gateway_id: id of gateway to attach it to the route
+@type gateway_id: int
+@return: none
+@rtype: none
 \end{DoxyVerb}
  
 
@@ -87,7 +107,11 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{delete()}{delete()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+delete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+id }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Delete the specified route table
+\begin{DoxyVerb}Delete the specified rtb
+@param rtb_id: id of the route table for the deletion
+@type rtb_id: int
+@return: none
+@rtype: none
 \end{DoxyVerb}
  
 
@@ -99,7 +123,11 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{describe()}{describe()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+describe (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Describe the specified route table
+\begin{DoxyVerb}Describe a specified route table using the name
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Route table properties
+@rtype: array
 \end{DoxyVerb}
  
 
@@ -111,7 +139,11 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{disassociate()}{disassociate()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+disassociate (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{association\+\_\+id }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Dissociate the specified route table
+\begin{DoxyVerb}Disassociate the specified association
+@param association_id: id of the association
+@type association_id: int
+@return: none
+@rtype: none
 \end{DoxyVerb}
  
 
@@ -123,8 +155,11 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{exists()}{exists()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+exists (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Check if the specified route table exists
-:return: Boolean
+\begin{DoxyVerb}Check if the specified route table using the name exists
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Boolean
+@rtype: bool
 \end{DoxyVerb}
  \mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436170b694acf5aabcbc85b26d1}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a351ff436170b694acf5aabcbc85b26d1}} 
 \index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!get\_assoc\_id@{get\_assoc\_id}}
@@ -132,8 +167,25 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{get\_assoc\_id()}{get\_assoc\_id()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+get\+\_\+assoc\+\_\+id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Get the specified route table association id
-:return: Int
+\begin{DoxyVerb}Get the association id
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Id of the association
+@rtype: int
+@raise: exception when the route table doesnt exists
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_a13815c70b13a1667a51527b8ec616c8e}} 
+\index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!get\_main\_rtb\_id\_from\_vpc@{get\_main\_rtb\_id\_from\_vpc}}
+\index{get\_main\_rtb\_id\_from\_vpc@{get\_main\_rtb\_id\_from\_vpc}!src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}}
+\doxysubsubsection{\texorpdfstring{get\_main\_rtb\_id\_from\_vpc()}{get\_main\_rtb\_id\_from\_vpc()}}
+{\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+get\+\_\+main\+\_\+rtb\+\_\+id\+\_\+from\+\_\+vpc (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{vpc\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the main route table id attached to a specified vpc
+@param vpc_id: id of the vpc
+@type vpc_id: int
+@return: Id of the main route table
+@rtype: int
+@raise: exception when the route table doesnt exists
 \end{DoxyVerb}
  \mbox{\Hypertarget{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}\label{classsrc_1_1aws__rtb__manager_1_1_aws_rtb_manager_ada34a0760275483003c907be4fb58146}} 
 \index{src.aws\_rtb\_manager.AwsRtbManager@{src.aws\_rtb\_manager.AwsRtbManager}!get\_rtb\_id@{get\_rtb\_id}}
@@ -141,8 +193,12 @@ Reimplemented from \mbox{\hyperlink{classsrc_1_1interfaces_1_1i__rtb__manager_1_
 \doxysubsubsection{\texorpdfstring{get\_rtb\_id()}{get\_rtb\_id()}}
 {\footnotesize\ttfamily def src.\+aws\+\_\+rtb\+\_\+manager.\+Aws\+Rtb\+Manager.\+get\+\_\+rtb\+\_\+id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{rtb\+\_\+tag\+\_\+name }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Get the specified route table id
-:return: Int
+\begin{DoxyVerb}Get the route table id
+@param rtb_tag_name: name of the route table
+@type rtb_tag_name: str
+@return: Id of the route table
+@rtype: int
+@raise: exception when the route table doesnt exists
 \end{DoxyVerb}
  
 
