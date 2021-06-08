@@ -45,6 +45,7 @@ class IntegrationTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
 
         # Create the Internet Gateway and attach it to the vpc
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
+        # Attach Internet Gateway to vpc
         await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
         self.__igw_id = await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
 
@@ -59,6 +60,29 @@ class IntegrationTestAwsRtbManager(unittest.IsolatedAsyncioTestCase):
 
         # Create the IGW route
         await self.__rtb_manager.create_route_igw(self.__rtb_id, "0.0.0.0/0", self.__igw_id)
+
+    async def asyncTearDown(self):
+        """
+        This method is used to clean class properties after each test method
+        """
+
+        if await self.__igw_manager.exists(self.__igw_tag_name):
+            await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
+            await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
+
+        if await self.__subnet_manager.exists(self.__public_subnet_tag_name):
+            await self.__subnet_manager.delete_subnet(self.__public_subnet_tag_name)
+
+        response_subnet = await self.__subnet_manager.exists(self.__private_subnet_tag_name)
+        if response_subnet:
+            await self.__subnet_manager.delete_subnet(self.__private_subnet_tag_name)
+
+        if await self.__rtb_manager.exists(self.__rtb_tag_name):
+            await self.__rtb_manager.delete(self.__rtb_id)
+
+        response_vpc = await self.__vpc_manager.exists(self.__vpc_tag_name)
+        if response_vpc:
+            await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
 
 
 if __name__ == '__main__':
