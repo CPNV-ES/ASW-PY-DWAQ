@@ -8,8 +8,8 @@ import re
 class AwsSubnetManager(ISubnetManager):
     def __init__(self):
         # AmazonEc2Client
-        self.client = boto3.client('ec2')
-        self.resource = boto3.resource('ec2')
+        self.client = boto3.client('ec2', use_ssl=False)
+        self.resource = boto3.resource('ec2', use_ssl=False)
 
     async def create_subnet(self, subnet_tag_name, cidr_block, vpc_id):
         """

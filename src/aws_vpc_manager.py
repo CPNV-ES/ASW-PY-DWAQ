@@ -7,8 +7,8 @@ import src.exception.vpc_exception as vpc_exception
 class AwsVpcManager(IVpcManager):
     def __init__(self):
         # AmazonEc2Client
-        self._client = boto3.client('ec2')
-        self._resource = boto3.resource('ec2')
+        self._client = boto3.client('ec2', use_ssl=False)
+        self._resource = boto3.resource('ec2', use_ssl=False)
         # Vpcs list
         self.vpcs = None
 

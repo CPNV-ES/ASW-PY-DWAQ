@@ -7,7 +7,7 @@ class AwsRtbManager(IRtbManager):
 
     def __init__(self):
         # AmazonEc2Client
-        self.client = boto3.client('ec2')
+        self.client = boto3.client('ec2', use_ssl=False)
 
     async def create(self, rtb_tag_name, vpc_id):
         """

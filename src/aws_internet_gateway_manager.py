@@ -4,8 +4,8 @@ from src.aws_vpc_manager import AwsVpcManager
 
 class AwsInternetGatewayManager:
     def __init__(self):
-        self.client = boto3.client("ec2")
-        self.resource = boto3.resource("ec2")
+        self.client = boto3.client("ec2", use_ssl=False)
+        self.resource = boto3.resource("ec2", use_ssl=False)
 
     async def create_internet_gateway(self, tag_name):
         """
