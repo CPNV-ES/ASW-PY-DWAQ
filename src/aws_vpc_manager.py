@@ -5,10 +5,17 @@ import src.exception.vpc_exception as vpc_exception
 
 
 class AwsVpcManager(IVpcManager):
-    def __init__(self):
+
+    # TODO using shared credentials https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+    def __init__(self, profile_name, region_end_point):
         # AmazonEc2Client
-        self._client = boto3.client('ec2', use_ssl=False)
+        self.profile_name = profile_name
+        self.region_end_point = region_end_point
+
+        session = boto3.Session(profile_name=self.profile_name, region_name=self.region_end_point)
+        self._client = session.client('ec2', use_ssl=False)
         self._resource = boto3.resource('ec2', use_ssl=False)
+
         # Vpcs list
         self.vpcs = None
 
