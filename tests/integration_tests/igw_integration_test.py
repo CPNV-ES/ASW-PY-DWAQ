@@ -13,7 +13,8 @@ class IntegrationTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         self.__igw_manager = igw_manager.AwsInternetGatewayManager()
         self.__vpc_manager = vpc_manager.AwsVpcManager()
-        self.__igw_tag_name = "IGW_INTEGRATION_TEST"
+        self.__igw_tag_name =
+        # TODO VPC must be created only one time. Take a look on "SetupClass" mechanism
         self.__vpc_tag_name = "IGW_VPC_INTEGRATION_TEST"
         self.__cidr_block = "10.0.0.0/16"
 
@@ -43,8 +44,9 @@ class IntegrationTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
         await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
-        await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
 
+        # TODO VPC must be deleted only one time. Take a look on "TearDownClass" mechanism
+        await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
 
 if __name__ == '__main__':
     unittest.main()

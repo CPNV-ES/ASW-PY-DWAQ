@@ -5,7 +5,9 @@ import src.exception.igw_exception as igw_exception
 
 
 class AwsInternetGatewayManager:
+
     def __init__(self):
+        # TODO DRY principle not respected, those items can be centralized
         self.client = boto3.client("ec2", use_ssl=False)
         self.resource = boto3.resource("ec2", use_ssl=False)
 
@@ -21,6 +23,7 @@ class AwsInternetGatewayManager:
         if await self.exists(tag_name):
             raise igw_exception.IgwNameAlreadyExists
         else:
+            # TODO, DRY -> https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.add_tags_to_resource
             self.client.create_internet_gateway(
                 TagSpecifications=[
                     {
@@ -124,6 +127,7 @@ class AwsInternetGatewayManager:
         else:
             raise igw_exception.IgwNameDoesNotExist
 
+    # TODO must be a private method (__), what do you think ?
     async def internet_gateway_id(self, igw_tag_name):
         """
         Get the id of the specified internet gateway

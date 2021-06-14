@@ -63,6 +63,7 @@ class AwsVpcManager(IVpcManager):
         response = self._client.describe_vpcs(Filters=[{'Name': 'tag:Name', 'Values': [vpc_tag_name]}])
         return True if response['Vpcs'] else False
 
+    # TODO must be a private method (__), what do you think ?
     async def describe_vpcs(self):
         """
         Get the information of all the vpcs

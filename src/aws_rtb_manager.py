@@ -7,6 +7,7 @@ class AwsRtbManager(IRtbManager):
 
     def __init__(self):
         # AmazonEc2Client
+        # TODO DRY principle not respected, those items can be centralized
         self.client = boto3.client('ec2', use_ssl=False)
         self.resource = boto3.resource('ec2', use_ssl=False)
 
@@ -94,6 +95,7 @@ class AwsRtbManager(IRtbManager):
             GatewayId=gateway_id,
         )
 
+    # TODO must be a private method (__), what do you think ?
     async def describe(self, rtb_tag_name):
         """
         Describe a specified route table using the name
@@ -121,6 +123,7 @@ class AwsRtbManager(IRtbManager):
         """
         return True if await self.get_rtb_id(rtb_tag_name) else False
 
+    # TODO must be a private method (__), what do you think ?
     async def get_assoc_id(self, rtb_tag_name):
         """
         Get the association id

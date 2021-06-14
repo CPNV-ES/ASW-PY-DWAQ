@@ -8,6 +8,7 @@ import re
 class AwsSubnetManager(ISubnetManager):
     def __init__(self):
         # AmazonEc2Client
+        # TODO DRY principle not respected, those items can be centralized
         self.client = boto3.client('ec2', use_ssl=False)
         self.resource = boto3.resource('ec2', use_ssl=False)
 
