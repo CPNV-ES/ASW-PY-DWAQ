@@ -1,14 +1,11 @@
 from abc import ABC
-
-import boto3
 from src.interfaces.i_vpc_manager import IVpcManager
+from src.AwsManager import AwsManager
 
 
-class AwsVpcManager(IVpcManager, ABC):
+class AwsVpcManager(IVpcManager, ABC, AwsManager):
     def __init__(self):
-        # AmazonEc2Client
-        self._client = boto3.client('ec2', use_ssl=False)
-        self._resource = boto3.resource('ec2', use_ssl=False)
+        AwsManager.__init__(self)
 
     async def create_vpc(self, tag_name, cidr_block):
         """

@@ -1,13 +1,10 @@
-import boto3
+from src.AwsManager import AwsManager
 from src.interfaces.i_rtb_manager import IRtbManager
 
 
-class AwsRtbManager(IRtbManager):
-
+class AwsRtbManager(IRtbManager, AwsManager):
     def __init__(self):
-        # AmazonEc2Client
-        self.client = boto3.client('ec2', use_ssl=False)
-        self.resource = boto3.resource('ec2', use_ssl=False)
+        AwsManager.__init__(self)
 
     async def create(self, tag_name, vpc_id):
         """
@@ -21,7 +18,7 @@ class AwsRtbManager(IRtbManager):
         @raise: exception when the route table already exists
         """
         try:
-            self.client.create_route_table(
+            self._client.create_route_table(
                 VpcId=vpc_id,
                 TagSpecifications=[
                     {
@@ -46,7 +43,7 @@ class AwsRtbManager(IRtbManager):
         @return: none
         @rtype: none
         """
-        self.client.associate_route_table(
+        self._client.associate_route_table(
             RouteTableId=rtb_id,
             SubnetId=subnet_id,
         )
@@ -59,7 +56,7 @@ class AwsRtbManager(IRtbManager):
         @return: none
         @rtype: none
         """
-        self.client.disassociate_route_table(
+        self._client.disassociate_route_table(
             AssociationId=association_id,
         )
 
@@ -71,7 +68,7 @@ class AwsRtbManager(IRtbManager):
         @return: none
         @rtype: none
         """
-        self.client.delete_route_table(
+        self._client.delete_route_table(
             RouteTableId=rtb_id,
         )
 
@@ -87,7 +84,7 @@ class AwsRtbManager(IRtbManager):
         @return: none
         @rtype: none
         """
-        self.client.create_route(
+        self._client.create_route(
             DestinationCidrBlock=cidr_block,
             RouteTableId=rtb_id,
             GatewayId=gateway_id,
@@ -101,7 +98,7 @@ class AwsRtbManager(IRtbManager):
         @return: Route table properties
         @rtype: array
         """
-        return self.client.describe_route_tables(
+        return self._client.describe_route_tables(
             Filters=[
                 {
                     'Name': 'tag:Name',
@@ -163,7 +160,7 @@ class AwsRtbManager(IRtbManager):
         @rtype: int
         @raise: exception when the route table doesnt exists
         """
-        main_route_table = self.client.describe_route_tables(
+        main_route_table = self._client.describe_route_tables(
             Filters=[
                 {
                     'Name': 'vpc-id', 'Values': [vpc_id]

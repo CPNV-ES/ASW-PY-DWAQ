@@ -1,13 +1,13 @@
 from abc import ABC
-import boto3
+
+from src.AwsManager import AwsManager
 from src.aws_vpc_manager import AwsVpcManager
 from src.interfaces.i_igw_manager import IIgwManager
 
 
-class AwsInternetGatewayManager(IIgwManager, ABC):
+class AwsInternetGatewayManager(IIgwManager, ABC, AwsManager):
     def __init__(self):
-        self.client = boto3.client("ec2", use_ssl=False)
-        self.resource = boto3.resource("ec2", use_ssl=False)
+        AwsManager.__init__(self)
 
     async def create_internet_gateway(self, tag_name):
         """
@@ -21,7 +21,7 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
         if await self.exists(tag_name):
             raise IgwNameAlreadyExists
         else:
-            self.client.create_internet_gateway(
+            self._client.create_internet_gateway(
                 TagSpecifications=[
                     {
                         'ResourceType': 'internet-gateway',
@@ -45,7 +45,7 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
         @raise: return false when the index of the internet gateway list is out of range
         """
         filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
-        igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+        igws_list = list(self._resource.internet_gateways.filter(Filters=filter))
 
         try:
             if igws_list[0].id:
@@ -64,9 +64,9 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
         """
         if await self.exists(tag_name):
             filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
-            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+            igws_list = list(self._resource.internet_gateways.filter(Filters=filter))
 
-            self.resource.InternetGateway(igws_list[0].id).delete()
+            self._resource.InternetGateway(igws_list[0].id).delete()
         else:
             raise IgwNameDoesNotExist
 
@@ -88,11 +88,11 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
 
             if await vpc_manager.exists(vpc_tag_name):
                 filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
-                igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+                igws_list = list(self._resource.internet_gateways.filter(Filters=filter))
                 vpc_id = await vpc_manager.get_id(vpc_tag_name)
 
                 try:
-                    self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
+                    self._resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
                     return vpc_id
                 except Exception:
                     raise IgwAlreadyAttached
@@ -113,11 +113,11 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
         """
         if await self.exists(tag_name):
             filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
-            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+            igws_list = list(self._resource.internet_gateways.filter(Filters=filter))
 
             try:
-                attached_vpc_id = self.resource.InternetGateway(igws_list[0].id).attachments[0]["VpcId"]
-                self.resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
+                attached_vpc_id = self._resource.InternetGateway(igws_list[0].id).attachments[0]["VpcId"]
+                self._resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
                 return attached_vpc_id
             except IndexError:
                 raise IgwNotAttached
@@ -135,7 +135,7 @@ class AwsInternetGatewayManager(IIgwManager, ABC):
         """
         if await self.exists(tag_name):
             filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
-            igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
+            igws_list = list(self._resource.internet_gateways.filter(Filters=filter))
             return igws_list[0].id
         raise IgwNameDoesNotExist
 

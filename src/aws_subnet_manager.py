@@ -1,15 +1,13 @@
 from abc import ABC
-import boto3
 import botocore
+from src.AwsManager import AwsManager
 from src.interfaces.i_subnet_manager import ISubnetManager
 import re
 
 
-class AwsSubnetManager(ISubnetManager, ABC):
+class AwsSubnetManager(ISubnetManager, ABC, AwsManager):
     def __init__(self):
-        # AmazonEc2Client
-        self.client = boto3.client('ec2', use_ssl=False)
-        self.resource = boto3.resource('ec2', use_ssl=False)
+        AwsManager.__init__(self)
 
     async def create_subnet(self, tag_name, cidr_block, vpc_id):
         """
@@ -28,7 +26,7 @@ class AwsSubnetManager(ISubnetManager, ABC):
             raise SubnetNameAlreadyExists()
         else:
             try:
-                subnet = self.resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
+                subnet = self._resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
                 subnet.create_tags(Tags=[{'Key': 'Name', 'Value': tag_name}])
             # Catch cidr block exceptions
             except botocore.exceptions.ClientError as err:
@@ -48,7 +46,7 @@ class AwsSubnetManager(ISubnetManager, ABC):
         """
         if await self.exists(tag_name):
             subnet_id = await self.get_id(tag_name)
-            self.client.delete_subnet(SubnetId=subnet_id)
+            self._client.delete_subnet(SubnetId=subnet_id)
         else:
             raise SubnetNameDoesNotExist()
 
@@ -60,7 +58,7 @@ class AwsSubnetManager(ISubnetManager, ABC):
         @return: true or false
         @rtype: bool
         """
-        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
+        response = self._client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
 
         return True if response['Subnets'] else False
 
@@ -73,7 +71,7 @@ class AwsSubnetManager(ISubnetManager, ABC):
         @rtype: int
         @raise: exception when the specified subnet does not exist
         """
-        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
+        response = self._client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
         if response['Subnets']:
             return response['Subnets'][0]['SubnetId']
         raise SubnetNameDoesNotExist()
