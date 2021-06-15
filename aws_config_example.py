@@ -1,7 +1,7 @@
 from botocore.config import Config
 
 aws = {
-    "aws_service_name": "",
+    "aws_service_name": "ec2",
     "config": Config(
         region_name="",
         signature_version='v4',
