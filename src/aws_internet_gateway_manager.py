@@ -1,6 +1,6 @@
 from abc import ABC
 
-from src.AwsManager import AwsManager
+from src.aws_manager import AwsManager
 from src.aws_vpc_manager import AwsVpcManager
 from src.interfaces.i_igw_manager import IIgwManager
 

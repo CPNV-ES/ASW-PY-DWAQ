@@ -1,6 +1,6 @@
 from abc import ABC
 import botocore
-from src.AwsManager import AwsManager
+from src.aws_manager import AwsManager
 from src.interfaces.i_subnet_manager import ISubnetManager
 import re
 

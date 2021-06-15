@@ -1,4 +1,4 @@
-from src.AwsManager import AwsManager
+from src.aws_manager import AwsManager
 from src.interfaces.i_rtb_manager import IRtbManager
 
 

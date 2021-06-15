@@ -1,6 +1,6 @@
 from abc import ABC
 from src.interfaces.i_vpc_manager import IVpcManager
-from src.AwsManager import AwsManager
+from src.aws_manager import AwsManager
 
 
 class AwsVpcManager(IVpcManager, ABC, AwsManager):
