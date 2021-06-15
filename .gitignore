@@ -141,3 +141,6 @@ main.py
 
 # Doxygen
 /docs/doxygen
+
+# Aws Config
+aws_config.py
