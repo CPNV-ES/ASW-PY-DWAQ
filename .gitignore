@@ -138,3 +138,6 @@ dmypy.json
 
 # Main
 main.py
+
+# Doxygen
+/docs/doxygen
