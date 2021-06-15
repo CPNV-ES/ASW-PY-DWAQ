@@ -9,10 +9,12 @@ class AwsManager:
             config=cfg.aws["config"],
             aws_access_key_id=cfg.aws["aws_access_key_id"],
             aws_secret_access_key=cfg.aws["aws_secret_access_key"],
+            use_ssl=False,
         )
         self._resource = boto3.resource(
             cfg.aws["aws_service_name"],
             config=cfg.aws["config"],
             aws_access_key_id=cfg.aws["aws_access_key_id"],
             aws_secret_access_key=cfg.aws["aws_secret_access_key"],
+            use_ssl=False,
         )
