@@ -34,7 +34,7 @@ class IntegrationTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
 
         # Test attach internet gateway to vpc
         attached_vpc_id = await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
-        current_vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+        current_vpc_id = await self.__vpc_manager.get_id(self.__vpc_tag_name)
         self.assertEqual(attached_vpc_id, current_vpc_id)
 
     async def asyncTearDown(self):

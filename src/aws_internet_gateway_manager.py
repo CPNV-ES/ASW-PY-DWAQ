@@ -1,10 +1,10 @@
+from abc import ABC
 import boto3
 from src.aws_vpc_manager import AwsVpcManager
-import src.exception.vpc_exception as vpc_exception
-import src.exception.igw_exception as igw_exception
+from src.interfaces.i_igw_manager import IIgwManager
 
 
-class AwsInternetGatewayManager:
+class AwsInternetGatewayManager(IIgwManager, ABC):
     def __init__(self):
         self.client = boto3.client("ec2", use_ssl=False)
         self.resource = boto3.resource("ec2", use_ssl=False)
@@ -19,7 +19,7 @@ class AwsInternetGatewayManager:
         @raise: exception when the specified internet gateway already exists
         """
         if await self.exists(tag_name):
-            raise igw_exception.IgwNameAlreadyExists
+            raise IgwNameAlreadyExists
         else:
             self.client.create_internet_gateway(
                 TagSpecifications=[
@@ -68,7 +68,7 @@ class AwsInternetGatewayManager:
 
             self.resource.InternetGateway(igws_list[0].id).delete()
         else:
-            raise igw_exception.IgwNameDoesNotExist
+            raise IgwNameDoesNotExist
 
     async def attach_to_vpc(self, igw_tag_name, vpc_tag_name):
         """
@@ -89,30 +89,30 @@ class AwsInternetGatewayManager:
             if await vpc_manager.exists(vpc_tag_name):
                 filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
                 igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
-                vpc_id = await vpc_manager.vpc_id(vpc_tag_name)
+                vpc_id = await vpc_manager.get_id(vpc_tag_name)
 
                 try:
                     self.resource.InternetGateway(igws_list[0].id).attach_to_vpc(VpcId=vpc_id)
                     return vpc_id
                 except Exception:
-                    raise igw_exception.IgwAlreadyAttached
+                    raise IgwAlreadyAttached
             else:
-                raise vpc_exception.VpcNameDoesNotExist
+                raise AwsVpcManager.VpcNameDoesNotExist
         else:
-            raise igw_exception.IgwNameDoesNotExist
+            raise IgwNameDoesNotExist
 
-    async def detach_from_vpc(self, igw_tag_name):
+    async def detach_from_vpc(self, tag_name):
         """
         Detach the specified internet gateway from the vpc
-        @param igw_tag_name: name of the internet gateway
-        @type igw_tag_name: str
+        @param tag_name: name of the internet gateway
+        @type tag_name: str
         @return: attached vpc id
         @rtype: int
         @raise: exception when the specified internet gateway does not exist
         @raise: exception when the specified internet gateway is not attached
         """
-        if await self.exists(igw_tag_name):
-            filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
+        if await self.exists(tag_name):
+            filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
             igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
 
             try:
@@ -120,21 +120,45 @@ class AwsInternetGatewayManager:
                 self.resource.InternetGateway(igws_list[0].id).detach_from_vpc(VpcId=attached_vpc_id)
                 return attached_vpc_id
             except IndexError:
-                raise igw_exception.IgwNotAttached
+                raise IgwNotAttached
         else:
-            raise igw_exception.IgwNameDoesNotExist
+            raise IgwNameDoesNotExist
 
-    async def internet_gateway_id(self, igw_tag_name):
+    async def get_id(self, tag_name):
         """
         Get the id of the specified internet gateway
-        @param igw_tag_name: name of the internet gateway
-        @type igw_tag_name: str
+        @param tag_name: name of the internet gateway
+        @type tag_name: str
         @return: id of the internet gateway
         @rtype: int
         @raise: exception when the specified internet gateway does not exist
         """
-        if await self.exists(igw_tag_name):
-            filter = [{'Name': 'tag:Name', 'Values': [igw_tag_name]}]
+        if await self.exists(tag_name):
+            filter = [{'Name': 'tag:Name', 'Values': [tag_name]}]
             igws_list = list(self.resource.internet_gateways.filter(Filters=filter))
             return igws_list[0].id
-        raise igw_exception.IgwNameDoesNotExist
+        raise IgwNameDoesNotExist
+
+
+class IgwNameAlreadyExists(Exception):
+    def __init__(self, expression="IgwNameAlreadyExists", message="Igw already exists!"):
+        self.expression = expression
+        self.message = message
+
+
+class IgwNameDoesNotExist(Exception):
+    def __init__(self, expression="IgwNameDoesNotExist", message="Igw doesn't exists!"):
+        self.expression = expression
+        self.message = message
+
+
+class IgwAlreadyAttached(Exception):
+    def __init__(self, expression="IgwAlreadyAttached", message="Igw is already attached!"):
+        self.expression = expression
+        self.message = message
+
+
+class IgwNotAttached(Exception):
+    def __init__(self, expression="IgwNotAttached", message="Igw is not attached to a vpc!"):
+        self.expression = expression
+        self.message = message

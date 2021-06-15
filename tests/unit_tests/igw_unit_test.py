@@ -1,7 +1,6 @@
 import unittest
 import src.aws_internet_gateway_manager as igw_manager
 import src.aws_vpc_manager as vpc_manager
-import src.exception.igw_exception as igw_exception
 
 
 class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
@@ -38,7 +37,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
-        with self.assertRaises(igw_exception.IgwNameAlreadyExists):
+        with self.assertRaises(igw_manager.IgwNameAlreadyExists):
             await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
 
     async def test_exists_igw_nominal_case_success(self):
@@ -77,7 +76,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         @return: none
         @rtype: none
         """
-        with self.assertRaises(igw_exception.IgwNameDoesNotExist):
+        with self.assertRaises(igw_manager.IgwNameDoesNotExist):
             await self.__igw_manager.delete_internet_gateway(self.__igw_tag_name)
 
     async def test_attach_igw_to_vpc_nominal_case_success(self):
@@ -89,7 +88,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         attached_vpc_id = await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
-        current_vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+        current_vpc_id = await self.__vpc_manager.get_id(self.__vpc_tag_name)
 
         self.assertEqual(attached_vpc_id, current_vpc_id)
 
@@ -106,7 +105,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
-        with self.assertRaises(igw_exception.IgwAlreadyAttached):
+        with self.assertRaises(igw_manager.IgwAlreadyAttached):
             await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
 
         await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
@@ -122,7 +121,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
         await self.__igw_manager.attach_to_vpc(self.__igw_tag_name, self.__vpc_tag_name)
         detached_vpc_id = await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
-        current_vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+        current_vpc_id = await self.__vpc_manager.get_id(self.__vpc_tag_name)
 
         self.assertEqual(detached_vpc_id, current_vpc_id)
 
@@ -135,7 +134,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
 
-        with self.assertRaises(igw_exception.IgwNotAttached):
+        with self.assertRaises(igw_manager.IgwNotAttached):
             await self.__igw_manager.detach_from_vpc(self.__igw_tag_name)
 
     async def test_igw_id_nominal_case_success(self):
@@ -146,7 +145,7 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         @rtype: none
         """
         await self.__igw_manager.create_internet_gateway(self.__igw_tag_name)
-        self.assertTrue(await self.__igw_manager.internet_gateway_id(self.__igw_tag_name))
+        self.assertTrue(await self.__igw_manager.get_id(self.__igw_tag_name))
 
     async def test_igw_id_does_not_exist_nominal_case_success(self):
         """
@@ -154,8 +153,8 @@ class MyTestAwsIgwManager(unittest.IsolatedAsyncioTestCase):
         @return: none
         @rtype: none
         """
-        with self.assertRaises(igw_exception.IgwNameDoesNotExist):
-            await self.__igw_manager.internet_gateway_id(self.__igw_tag_name)
+        with self.assertRaises(igw_manager.IgwNameDoesNotExist):
+            await self.__igw_manager.get_id(self.__igw_tag_name)
 
     async def asyncTearDown(self):
         """
