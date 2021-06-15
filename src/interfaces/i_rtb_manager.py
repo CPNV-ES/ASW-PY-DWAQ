@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class IRtbManager(ABC):
     @abstractmethod
-    def create(self, rtb_tag_name, vpc_id):
+    def create(self, tag_name, vpc_id):
         pass
 
     @abstractmethod
@@ -23,6 +23,6 @@ class IRtbManager(ABC):
         pass
 
     @abstractmethod
-    def describe(self, rtb_tag_name):
+    def describe(self, tag_name):
         pass
 

@@ -1,6 +1,5 @@
 import boto3
 from src.interfaces.i_rtb_manager import IRtbManager
-import src.exception.rtb_exception as rtb_exception
 
 
 class AwsRtbManager(IRtbManager):
@@ -10,11 +9,11 @@ class AwsRtbManager(IRtbManager):
         self.client = boto3.client('ec2', use_ssl=False)
         self.resource = boto3.resource('ec2', use_ssl=False)
 
-    async def create(self, rtb_tag_name, vpc_id):
+    async def create(self, tag_name, vpc_id):
         """
         Create the specified route table
-        @param rtb_tag_name: name of the route table
-        @type rtb_tag_name: str
+        @param tag_name: name of the route table
+        @type tag_name: str
         @param vpc_id: the id of the vpc to attach
         @type vpc_id: int
         @return: none
@@ -29,13 +28,13 @@ class AwsRtbManager(IRtbManager):
                         'ResourceType': 'route-table',
                         'Tags': [{
                             'Key': 'Name',
-                            'Value': rtb_tag_name
+                            'Value': tag_name
                         }]
                     }
                 ]
             )
         except Exception:
-            raise rtb_exception.RtbAlreadyExists
+            raise RtbAlreadyExists
 
     async def associate(self, rtb_id, subnet_id):
         """
@@ -94,11 +93,11 @@ class AwsRtbManager(IRtbManager):
             GatewayId=gateway_id,
         )
 
-    async def describe(self, rtb_tag_name):
+    async def describe(self, tag_name):
         """
         Describe a specified route table using the name
-        @param rtb_tag_name: name of the route table
-        @type rtb_tag_name: str
+        @param tag_name: name of the route table
+        @type tag_name: str
         @return: Route table properties
         @rtype: array
         """
@@ -106,50 +105,54 @@ class AwsRtbManager(IRtbManager):
             Filters=[
                 {
                     'Name': 'tag:Name',
-                    'Values': [rtb_tag_name]
+                    'Values': [tag_name]
                 }
             ],
         )
 
-    async def exists(self, rtb_tag_name):
+    async def exists(self, tag_name):
         """
         Check if the specified route table using the name exists
-        @param rtb_tag_name: name of the route table
-        @type rtb_tag_name: str
+        @param tag_name: name of the route table
+        @type tag_name: str
         @return: Boolean
         @rtype: bool
         """
-        return True if await self.get_rtb_id(rtb_tag_name) else False
+        try:
+            if await self.get_id(tag_name):
+                return True
+        except RtbDoesntExists:
+            return False
 
-    async def get_assoc_id(self, rtb_tag_name):
+    async def get_assoc_id(self, tag_name):
         """
         Get the association id
-        @param rtb_tag_name: name of the route table
-        @type rtb_tag_name: str
+        @param tag_name: name of the route table
+        @type tag_name: str
         @return: Id of the association
         @rtype: int
         @raise: exception when the route table doesnt exists
         """
-        response = await self.describe(rtb_tag_name)
-        try:
+        response = await self.describe(tag_name)
+        if response['RouteTables'][0]["Associations"]:
             return response['RouteTables'][0]["Associations"][0]["RouteTableAssociationId"]
-        except IndexError:
-            raise rtb_exception.RtbDoesntExists
+        else:
+            raise RtbDoesntExists
 
-    async def get_rtb_id(self, rtb_tag_name):
+    async def get_id(self, tag_name):
         """
         Get the route table id
-        @param rtb_tag_name: name of the route table
-        @type rtb_tag_name: str
+        @param tag_name: name of the route table
+        @type tag_name: str
         @return: Id of the route table
         @rtype: int
         @raise: exception when the route table doesnt exists
         """
-        response = await self.describe(rtb_tag_name)
-        try:
+        response = await self.describe(tag_name)
+        if response['RouteTables']:
             return response['RouteTables'][0]["RouteTableId"]
-        except IndexError:
-            raise rtb_exception.RtbDoesntExists
+        else:
+            raise RtbDoesntExists
 
     async def get_main_rtb_id_from_vpc(self, vpc_id):
         """
@@ -173,4 +176,16 @@ class AwsRtbManager(IRtbManager):
         try:
             return main_route_table['RouteTables'][0]['Associations'][0]['RouteTableId']
         except IndexError:
-            raise rtb_exception.RtbDoesntExists
+            raise RtbDoesntExists
+
+
+class RtbAlreadyExists(Exception):
+    def __init__(self, expression="RtbAlreadyExists", message="Rtb already exists!"):
+        self.expression = expression
+        self.message = message
+
+
+class RtbDoesntExists(Exception):
+    def __init__(self, expression="RtbDoesntExists", message="Rtb Doesnt exists!"):
+        self.expression = expression
+        self.message = message
