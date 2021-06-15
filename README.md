@@ -11,7 +11,6 @@ Implémentation d'une infrastructure sur AWS depuis une base python
 | Python | 3.9.5   |
 | Pip    | 21.1.1  |
 | Boto3 (SDK AWS) | 1.17.70 |
-| Aws-Cli | 2.1.39 |
 
 ### Python
 
@@ -22,11 +21,13 @@ Implémentation d'une infrastructure sur AWS depuis une base python
 
 1. You need to run the command `pip install boto3`, for specific version `pip install boto3==1.17.70`
 
-### Configure Aws-Cli
-In our project we are using the default profile because a config file isn't implemented yet
-
-1. Download Cli [link](https://aws.amazon.com/fr/cli/)
-2. When it's installed run the command `aws configure`, you can modify the default profile by adding credientials given by your admin
+### Credentials
+We are using a config file in our project.
+1. Copy `aws_config_example` to `aws_config`
+2. Enter fields
+    1. region_name
+    2. aws_access_key_id
+    3. aws_secret_access_key
 
 ## Testing
 
