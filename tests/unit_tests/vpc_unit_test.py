@@ -1,8 +1,5 @@
 import unittest
-
 import src.aws_vpc_manager as aws_m
-
-import src.exception.vpc_exception as vpc_exception
 
 
 class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
@@ -19,7 +16,7 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         self.__profile_name = "VIR1_INFRA_DEPLOYMENT"
         self.__region_end_point = "ap-south-1"
         self.__vpc_manager = aws_m.AwsVpcManager()
-        self.__vpc_tag_name = "VIR1_SCRUMMASTER"
+        self.__tag_name = "VIR1_SCRUMMASTER"
         self.__cidr_block = "10.0.0.0/16"
 
     async def test_create_vpc_nominal_case_success(self):
@@ -29,9 +26,9 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         @return: none
         @rtype: none
         """
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__tag_name, self.__cidr_block)
 
-        self.assertTrue(await self.__vpc_manager.exists(self.__vpc_tag_name))
+        self.assertTrue(await self.__vpc_manager.exists(self.__tag_name))
 
     async def test_create_vpc_already_exists_throw_exception(self):
         """
@@ -41,10 +38,10 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         @rtype: none
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__tag_name, self.__cidr_block)
         # when
-        with self.assertRaises(vpc_exception.VpcNameAlreadyExists):
-            await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        with self.assertRaises(aws_m.VpcNameAlreadyExists):
+            await self.__vpc_manager.create_vpc(self.__tag_name, self.__cidr_block)
         # then : Exception must be thrown
 
     async def test_delete_vpc_nominal_case_success(self):
@@ -54,11 +51,11 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         @rtype: none
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__tag_name, self.__cidr_block)
         # when
-        await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
+        await self.__vpc_manager.delete_vpc(self.__tag_name)
         # then
-        self.assertFalse(await self.__vpc_manager.exists(self.__vpc_tag_name))
+        self.assertFalse(await self.__vpc_manager.exists(self.__tag_name))
 
     async def test_exists_vpc_nominal_case_success(self):
         """
@@ -67,10 +64,10 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         @rtype: none
         """
         # given
-        await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__cidr_block)
+        await self.__vpc_manager.create_vpc(self.__tag_name, self.__cidr_block)
         # when
         # then
-        self.assertTrue(await self.__vpc_manager.exists(self.__vpc_tag_name))
+        self.assertTrue(await self.__vpc_manager.exists(self.__tag_name))
 
     async def asyncTearDown(self):
         """
@@ -78,8 +75,8 @@ class UnitTestAwsVpcManager(unittest.IsolatedAsyncioTestCase):
         @return: none
         @rtype: none
         """
-        if await self.__vpc_manager.exists(self.__vpc_tag_name):
-            await self.__vpc_manager.delete_vpc(self.__vpc_tag_name)
+        if await self.__vpc_manager.exists(self.__tag_name):
+            await self.__vpc_manager.delete_vpc(self.__tag_name)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,4 @@
 import unittest
-import asyncio
-
 import src.aws_vpc_manager as aws_m
 
 
