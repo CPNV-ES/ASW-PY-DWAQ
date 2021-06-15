@@ -1,21 +1,21 @@
+from abc import ABC
 import boto3
 import botocore
 from src.interfaces.i_subnet_manager import ISubnetManager
-import src.exception.subnet_exception as subnet_exception
 import re
 
 
-class AwsSubnetManager(ISubnetManager):
+class AwsSubnetManager(ISubnetManager, ABC):
     def __init__(self):
         # AmazonEc2Client
         self.client = boto3.client('ec2', use_ssl=False)
         self.resource = boto3.resource('ec2', use_ssl=False)
 
-    async def create_subnet(self, subnet_tag_name, cidr_block, vpc_id):
+    async def create_subnet(self, tag_name, cidr_block, vpc_id):
         """
         Create a new subnet
-        @param subnet_tag_name: name of the subnet
-        @type subnet_tag_name: str
+        @param tag_name: name of the subnet
+        @type tag_name: str
         @param cidr_block: primary IPv4 CIDR block for the subnet
         @type cidr_block: str
         @param vpc_id: id of the vpc
@@ -24,56 +24,74 @@ class AwsSubnetManager(ISubnetManager):
         @rtype: none
         @raise: exception when the cidr is incorrect
         """
-        if await self.exists(subnet_tag_name):
-            raise subnet_exception.SubnetNameAlreadyExists()
+        if await self.exists(tag_name):
+            raise SubnetNameAlreadyExists()
         else:
             try:
                 subnet = self.resource.create_subnet(CidrBlock=cidr_block, VpcId=vpc_id)
-                subnet.create_tags(Tags=[{'Key': 'Name', 'Value': subnet_tag_name}])
-            # Catch les exceptions du au CidrBlock
+                subnet.create_tags(Tags=[{'Key': 'Name', 'Value': tag_name}])
+            # Catch cidr block exceptions
             except botocore.exceptions.ClientError as err:
                 if re.search('CidrBlock', err.response['Error']['Message']):
-                    raise subnet_exception.SubnetCidrBlockException("CIDR exception", err.response['Error']['Message'])
+                    raise SubnetCidrBlockException("CIDR exception", err.response['Error']['Message'])
                 else:
                     raise err
 
-    async def delete_subnet(self, subnet_tag_name):
+    async def delete_subnet(self, tag_name):
         """
         Delete the specified subnet
-        @param subnet_tag_name: name of the subnet
-        @type subnet_tag_name: str
+        @param tag_name: name of the subnet
+        @type tag_name: str
         @return: none
         @rtype: none
         @raise: exception when the specified subnet does not exist
         """
-        if await self.exists(subnet_tag_name):
-            subnet_id = await self.subnet_id(subnet_tag_name)
+        if await self.exists(tag_name):
+            subnet_id = await self.get_id(tag_name)
             self.client.delete_subnet(SubnetId=subnet_id)
         else:
-            raise subnet_exception.SubnetNameDoesNotExist()
+            raise SubnetNameDoesNotExist()
 
-    async def exists(self, subnet_tag_name):
+    async def exists(self, tag_name):
         """
         Define if the subnet exists or not
-        @param subnet_tag_name: name of the subnet
-        @type subnet_tag_name: str
+        @param tag_name: name of the subnet
+        @type tag_name: str
         @return: true or false
         @rtype: bool
         """
-        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [subnet_tag_name]}])
+        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
 
         return True if response['Subnets'] else False
 
-    async def subnet_id(self, subnet_tag_name):
+    async def get_id(self, tag_name):
         """
         Get the id of the specified subnet
-        @param subnet_tag_name: name of the subnet
-        @type subnet_tag_name: str
+        @param tag_name: name of the subnet
+        @type tag_name: str
         @return: id of the subnet
         @rtype: int
         @raise: exception when the specified subnet does not exist
         """
-        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [subnet_tag_name]}])
+        response = self.client.describe_subnets(Filters=[{'Name': 'tag:Name', 'Values': [tag_name]}])
         if response['Subnets']:
             return response['Subnets'][0]['SubnetId']
-        raise subnet_exception.SubnetNameDoesNotExist()
+        raise SubnetNameDoesNotExist()
+
+
+class SubnetNameAlreadyExists(Exception):
+    def __init__(self, expression="SubnetNameAlreadyExists", message="Subnet already exists!"):
+        self.expression = expression
+        self.message = message
+
+
+class SubnetNameDoesNotExist(Exception):
+    def __init__(self, expression="SubnetNameDoesNotExist", message="Subnet doesn't exists!"):
+        self.expression = expression
+        self.message = message
+
+
+class SubnetCidrBlockException(Exception):
+    def __init__(self, expression="SubnetCidrBlockException", message="Cidr block error!"):
+        self.expression = expression
+        self.message = message

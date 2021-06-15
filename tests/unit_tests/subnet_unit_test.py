@@ -2,7 +2,6 @@ import unittest
 
 import src.aws_subnet_manager as subnet_manager
 import src.aws_vpc_manager as vpc_manager
-import src.exception.subnet_exception as subnet_exception
 import botocore
 
 
@@ -37,7 +36,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         @rtype: none
         """
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        self.__vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+        self.__vpc_id = await self.__vpc_manager.get_id(self.__vpc_tag_name)
 
     async def test_create_subnet_nominal_case_success(self):
         """
@@ -59,7 +58,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         # given
         await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
-        with self.assertRaises((subnet_exception.SubnetNameAlreadyExists, botocore.exceptions.ClientError)):
+        with self.assertRaises((subnet_manager.SubnetNameAlreadyExists, botocore.exceptions.ClientError)):
             await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # then : Exception must be thrown
 
@@ -73,7 +72,7 @@ class UnitTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         # given
         await self.__subnet_manager.create_subnet(self.__subnet_tag_name, self.__subnet_cidr_block, self.__vpc_id)
         # when
-        with self.assertRaises((subnet_exception.SubnetCidrBlockException, botocore.exceptions.ClientError)):
+        with self.assertRaises((subnet_manager.SubnetCidrBlockException, botocore.exceptions.ClientError)):
             await self.__subnet_manager.create_subnet(self.__subnet_tag_name_2, self.__subnet_cidr_block, self.__vpc_id)
         # then : Exception must be thrown
 

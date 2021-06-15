@@ -30,7 +30,7 @@ class IntegrationTestAwsSubnetManager(unittest.IsolatedAsyncioTestCase):
         Setup a new vpc
         """
         await self.__vpc_manager.create_vpc(self.__vpc_tag_name, self.__vpc_cidr_block)
-        self.__vpc_id = await self.__vpc_manager.vpc_id(self.__vpc_tag_name)
+        self.__vpc_id = await self.__vpc_manager.get_id(self.__vpc_tag_name)
 
     async def test_scenario_nominal_case_success(self):
         """
