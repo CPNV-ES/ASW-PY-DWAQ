@@ -26,3 +26,4 @@ class AwsKeypairManager(IKeypairManager, ABC, AwsManager):
 
     def delete(self, name):
         key_pair = self._client.delete_key_pair(KeyName=name)
+        return key_pair

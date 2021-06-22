@@ -5,7 +5,7 @@ import src.aws_keypair_manager as key_m
 
 class UnitTestAwsKeypairManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
-        self.name = "skeletonkey"
+        self.name = 'skeletonkey'
         self.keys_manager = key_m.AwsKeypairManager()
 
     def test_create_keypair(self):
@@ -14,7 +14,8 @@ class UnitTestAwsKeypairManager(unittest.IsolatedAsyncioTestCase):
         @return: none
         """
         key_pair = self.keys_manager.create(self.name)
-        self.assertTrue(key_pair['KeyName'] == self.name)
+        keyname = key_pair['KeyName']
+        self.assertTrue((keyname == self.name))
 
     def test_create_keypair_already_exists(self):
         """
@@ -32,3 +33,5 @@ class UnitTestAwsKeypairManager(unittest.IsolatedAsyncioTestCase):
         if self.keys_manager.exists(self.name):
             self.keys_manager.delete(self.name)
 
+if __name__ == '__main__':
+    unittest.main()
