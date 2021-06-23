@@ -1,3 +1,6 @@
+# doc build
+docs/_build
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -91,6 +94,8 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
+.idea
+
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
@@ -127,3 +132,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# PyCharm
+.idea
+
+# Main
+main.py
+
+# Doxygen
+/docs/doxygen
+
+# Aws Config
+aws_config.py
